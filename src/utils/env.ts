@@ -4,4 +4,4 @@ export const isProd = process.env.NODE_ENV === 'production'
 
 export const isTest = process.env.NODE_ENV === 'test'
 
-export const API_BASE = process.env.VITE_API_BASE
+export const API_BASE = import.meta.env.VITE_API_BASE

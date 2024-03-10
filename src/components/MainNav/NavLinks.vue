@@ -2,6 +2,8 @@
 import { NAV_ITEMS } from '@/constants/nav';
 import LinkItem from './LinkItem.vue';
 
+const { userInfo } = storeToRefs(useUserStore())
+
 const NavLinksRef = ref<HTMLElement | null>(null)
 
 const { arrivedState } = useScroll(NavLinksRef, {
@@ -18,7 +20,7 @@ const showEndMask = computed(() => {
 </script>
 
 <template>
-  <div class="main-nav-links max-h-[calc(100%-100px)] overflow-y-scroll" ref="NavLinksRef" :class="{
+  <div v-if="userInfo.isLogged && userInfo.isAdmin" class="main-nav-links max-h-[calc(100%-100px)] flex-grow overflow-y-scroll" ref="NavLinksRef" :class="{
     'start-mask': showStartMask,
     'end-mask': showEndMask,
   }">

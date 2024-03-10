@@ -58,7 +58,7 @@ const route = useRoute()
     'expanded': isNavExpanded,
   }">
       <div class="w-max h-full flex flex-col justify-between" ref="MainNavContentRef">
-        <div class="max-h-[calc(100%-60px)] flex-grow">
+        <div class="max-h-[calc(100%-60px)] flex-grow flex flex-col">
           <LinkItem to="/">
             <img src="@/assets/images/logo-head.png" class="w-11 h-11" />
             <template #extra>
