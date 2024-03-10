@@ -1,0 +1,2 @@
+export const STORAGE_PREFIX = 'DOULOG_'
+export const STORAGE_TOKEN = `${STORAGE_PREFIX}TOKEN`
