@@ -23,7 +23,7 @@ export default defineConfig({
         '@vueuse/core',
         VueRouterAutoImports,
       ],
-      dirs: ['./src/stores']
+      dirs: ['./src/stores', './src/composables']
     })
   ],
   resolve: {

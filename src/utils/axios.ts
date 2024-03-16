@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { API_BASE } from './env'
 import { STORAGE_TOKEN } from '@/constants/base'
+import { useToast } from '@/composables/useToast'
 
 export const instance = axios.create({
   baseURL: API_BASE,
@@ -12,6 +13,8 @@ instance.interceptors.request.use((config) => {
   return config
 })
 
+const { error } = useToast()
+
 instance.interceptors.response.use(
   (resp) => {
     switch (resp.data.code) {
@@ -21,6 +24,7 @@ instance.interceptors.response.use(
       default:
         // error
         console.log("Api error: ", resp.data.msg, resp)
+        error({ content: resp.data.msg, duration: 2000 })
     }
   },
   (err) => {

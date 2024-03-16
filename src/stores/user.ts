@@ -21,6 +21,10 @@ export const useUserStore = defineStore('user', () => {
 
   const token = useLocalStorage(STORAGE_TOKEN, "")
 
+  const setToken = (newToken: string) => {
+    token.value = newToken
+  }
+
   watch(token, (newToken) => {
     if (newToken) {
       userInfo.value = { isLogged: false }
@@ -32,5 +36,5 @@ export const useUserStore = defineStore('user', () => {
     immediate: true
   })
 
-  return { isFetching, userInfo }
+  return { isFetching, userInfo, setToken, fetchUserInfo }
 })

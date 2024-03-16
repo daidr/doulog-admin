@@ -1,3 +1,4 @@
+// @unocss-include
 import { createNavCategory, createNavItem, createRootCategory, mergeNavCategory } from "@/utils/nav-helper"
 
 const root = createRootCategory();

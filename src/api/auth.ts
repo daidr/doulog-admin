@@ -42,3 +42,15 @@ export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
     isBanned: result.data.is_banned
   }
 }
+
+export async function updateSelfUsername(name: string): Promise<boolean> {
+  const result = await instance.post('/api/x/user/v1/me/change_name', {
+    new_name: name
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}

@@ -1,9 +1,17 @@
 <script setup lang="ts">
-const { userInfo, isFetching } = storeToRefs(useUserStore())
+import { useUserModal } from '@/composables/modals/useUserModal';
+
+const userStore = useUserStore()
+
+const { userInfo, isFetching } = storeToRefs(userStore)
+
+const handleUserClick = () => {
+  useUserModal()
+}
 </script>
 
 <template>
-  <div class="flex items-center">
+  <div class="user-card flex items-center" :data-tips="userInfo.isLogged ? '管理' : '登录'" @click="handleUserClick">
     <template v-if="isFetching">
       <div class="item-size flex items-center justify-center">
         <div class="w-11 h-11 rounded-md ring-gray-200 ring-1 flex items-center justify-center">
@@ -37,4 +45,19 @@ const { userInfo, isFetching } = storeToRefs(useUserStore())
   </div>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.user-card {
+  @apply relative cursor-pointer;
+
+  &::before {
+    @apply content-[attr(data-tips)] opacity-0 pointer-events-none;
+    @apply absolute inset-0 bg-black/50 rounded-md;
+    @apply transition-opacity duration-300;
+    @apply text-white flex items-center justify-center font-bold text-xl;
+  }
+
+  &:hover::before {
+    @apply opacity-100;
+  }
+}
+</style>
