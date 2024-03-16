@@ -6,6 +6,7 @@ interface BaseButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   loading?: boolean;
   ghost?: boolean;
   color?: string;
+  disabled?: boolean;
 }
 
 defineProps<BaseButtonProps>()
@@ -15,7 +16,7 @@ defineProps<BaseButtonProps>()
   <button :class="{
     'ghost': ghost,
     'normal': !ghost
-  }" :disabled="loading" :style="{
+  }" :disabled="loading || disabled" :style="{
     '--bg-color': color
   }">
     <div class="bg"></div>
