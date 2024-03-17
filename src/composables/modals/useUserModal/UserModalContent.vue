@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { API_BASE } from '@/utils/env';
 import { getUserStatusText } from '@/utils/user';
-import { useChangeNameModal } from '../useChangeNameModal';
 import BaseButton from '@/components/base/BaseButton.vue';
 
 const userStore = useUserStore()
@@ -16,10 +15,6 @@ const handleLogin = () => {
   backendUrl.searchParams.set('platform', 'github')
   backendUrl.searchParams.set('callback', frontendCallback)
   window.open(backendUrl, "_blank", "popup, width=600, height=600, location=no")
-}
-
-const handleChangeName = () => {
-  useChangeNameModal()
 }
 
 watch(() => userInfo.value.isLogged, () => {
@@ -58,12 +53,6 @@ watch(() => userInfo.value.isLogged, () => {
           </tr>
         </table>
       </div>
-    </div>
-    <div>
-      <button @click="handleChangeName"
-        class="text-white bg-gray-800/80 hover:bg-gray-700 flex items-center w-full py-1.5 px-5 justify-center gap-2 rounded-3 text-base">
-        <span>修改昵称</span>
-      </button>
     </div>
   </div>
 </template>

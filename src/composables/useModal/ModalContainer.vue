@@ -23,7 +23,7 @@ const handleConfirm = (modal: ModalInfo) => {
 }
 
 const handleClose = (modal: ModalInfo) => {
-  if(!modal) return
+  if (!modal) return
   emit('close', modal)
 }
 
@@ -88,13 +88,14 @@ onUnmounted(() => {
       <div v-if="maskVisible" class="modal-mask" />
     </Transition>
     <TransitionGroup name="modal" tag="div" class="modal-transition-group">
-      <Modal v-for="(modal, index) of modals" :key="modal._id" :info="modal" @cancel="handleCancel(modal)"
-        @confirm="handleConfirm(modal)" :class="{
-        'pointer-events-none': index < modals.length - 1,
-      }" :style="{
+      <div v-for="(modal, index) of modals" :key="modal._id" class="transition-transform,filter fixed z-100 top-1/2 left-1/2" :style="{
         transform: `translateY(${getTranslateValue(modals.length - 1 - index)}vh) scale(${getScaleValue(modals.length - 1 - index)})`,
         filter: `brightness(${getBrightnessValue(modals.length - 1 - index)})`,
+      }">
+        <Modal :info="modal" @cancel="handleCancel(modal)" @confirm="handleConfirm(modal)" :class="{
+        'pointer-events-none': index < modals.length - 1,
       }" />
+      </div>
     </TransitionGroup>
   </Teleport>
 </template>
@@ -105,46 +106,20 @@ onUnmounted(() => {
   @apply fixed top-0 left-0 z-99;
 }
 
-.modal-transition-group {
-  --animation-function: ease-out;
-  --animation-duration: 0.15s;
-}
-
-@keyframes model-move {
-  0% {
-    transform: translateY(calc(15vh));
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
 
   .modal-enter-active,
   .modal-leave-active {
-    transition: opacity var(--animation-duration) linear;
-  }
-
-  .modal-enter-active {
     :deep(.common-modal-modal) {
-      animation: model-move var(--animation-duration) var(--animation-function) forwards;
-    }
-  }
-
-  .modal-leave-active {
-
-    :deep(.common-modal-modal) {
-      animation: model-move var(--animation-duration) var(--animation-function) reverse forwards;
+      @apply transition duration-200;
     }
   }
 
   .modal-enter-from,
   .modal-leave-to {
-    @apply opacity-99;
+    :deep(.common-modal-modal) {
+      @apply opacity-0 transform-gpu translate-y-50;
+    }
   }
 }
 </style>

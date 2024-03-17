@@ -1,4 +1,6 @@
+import UserActionMenu from "./UserActionMenu.vue"
 import UserModalContent from "./UserModalContent.vue"
+import { useChangeNameModal } from '../useChangeNameModal';
 
 export const useUserModal = () => {
   const userStore = useUserStore()
@@ -8,12 +10,26 @@ export const useUserModal = () => {
     title: computed(() => userInfo.value.isLogged ? '管理' : '登录'),
     icon: 'i-mingcute-user-4-fill',
     content: () => h(UserModalContent),
-    hideCancel: computed(() => !userInfo.value.isLogged),
-    cancelText: '登出',
+    hideCancel: true,
     confirmText: '关闭',
+    cancelText: '登出',
     onCancel() {
       setToken('')
       return false
+    },
+    customTools: () => {
+      if (userInfo.value.isLogged) {
+        return h(UserActionMenu, {
+          onLogout: () => {
+            setToken('')
+          },
+          onUpdateUsername: () => {
+            useChangeNameModal()
+          }
+        })
+      }
+
+      return '';
     }
   })
 }

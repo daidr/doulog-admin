@@ -17,6 +17,7 @@ export interface ModalInfo {
   loading?: MaybeRefOrGetter<boolean>
   disabledConfirm?: MaybeRefOrGetter<boolean>
   disabledCancel?: MaybeRefOrGetter<boolean>
+  customTools?: MaybeRefOrGetter<string | VNode>
 }
 
 let modals: Ref<ModalInfo[]> | undefined
