@@ -1,4 +1,4 @@
-import { updateSelfUsername } from "@/api/auth";
+import { updateSelfUsername } from "@/api/user";
 import BaseInput from "@/components/base/BaseInput.vue";
 import { useToast } from "@/composables/useToast";
 

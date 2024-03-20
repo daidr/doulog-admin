@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getSelfUserInfo, type UserInfoWithLogged } from '@/api/auth'
+import { getSelfUserInfo, type UserInfoWithLogged } from '@/api/user'
 import { STORAGE_TOKEN } from '@/constants/base'
 
 export const useUserStore = defineStore('user', () => {

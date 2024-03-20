@@ -31,7 +31,7 @@ watch(() => userInfo.value.isLogged, () => {
   </div>
   <div v-else class="flex flex-col gap-2">
     <div class="flex gap-2 items-start">
-      <img :src="`https://cn.gravatar.com/avatar/${userInfo.emailHash}?size=128`"
+      <img :src="`https://gravatar.loli.net/avatar/${userInfo.emailHash}?size=128`"
         class="w-15 h-15 rounded-xl ring-gray-200 ring-1">
       <div class="text-base">
         <table>

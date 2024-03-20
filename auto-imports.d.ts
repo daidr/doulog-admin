@@ -7,7 +7,9 @@ export {}
 declare global {
   const EffectScope: typeof import('vue')['EffectScope']
   const ModalContainer: typeof import('./src/composables/useModal/index')['ModalContainer']
+  const ToastContainer: typeof import('./src/composables/useToast/index')['ToastContainer']
   const _initModal: typeof import('./src/composables/useModal/index')['_initModal']
+  const _initToasts: typeof import('./src/composables/useToast/index')['_initToasts']
   const acceptHMRUpdate: typeof import('pinia')['acceptHMRUpdate']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -266,6 +268,7 @@ declare global {
   const useTitle: typeof import('@vueuse/core')['useTitle']
   const useToNumber: typeof import('@vueuse/core')['useToNumber']
   const useToString: typeof import('@vueuse/core')['useToString']
+  const useToast: typeof import('./src/composables/useToast/index')['useToast']
   const useToggle: typeof import('@vueuse/core')['useToggle']
   const useTransition: typeof import('@vueuse/core')['useTransition']
   const useUrlSearchParams: typeof import('@vueuse/core')['useUrlSearchParams']

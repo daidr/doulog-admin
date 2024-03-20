@@ -1,4 +1,4 @@
-import type { UserInfo } from "@/api/auth";
+import type { UserInfo } from "@/api/user";
 
 export function getUserStatusText(user: UserInfo) {
   if (user.isAdmin) {
