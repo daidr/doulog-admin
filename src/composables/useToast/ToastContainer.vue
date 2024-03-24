@@ -16,7 +16,7 @@ const handleClose = (toast: ToastInfo) => {
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport to="#teleport-container">
     <TransitionGroup name="toast" tag="div" class="toast-transition-group">
       <Toast v-for="toast of toasts" :key="toast._id" :info="toast" @close="handleClose(toast)" />
     </TransitionGroup>

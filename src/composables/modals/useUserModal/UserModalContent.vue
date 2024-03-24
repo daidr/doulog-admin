@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { API_BASE } from '@/utils/env';
-import { getUserStatusText } from '@/utils/user';
 import BaseButton from '@/components/base/BaseButton.vue';
+import UserRoleCell from '@/components/user/UserRoleCell.vue';
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
@@ -22,6 +22,10 @@ watch(() => userInfo.value.isLogged, () => {
     loginProcessing.value = false
   }
 })
+
+function formatTime(time: number) {
+  return useDateFormat(time * 1000, 'YYYY-MM-DD HH:mm:ss').value
+}
 </script>
 
 <template>
@@ -40,7 +44,7 @@ watch(() => userInfo.value.isLogged, () => {
             <td>{{ userInfo.id }}</td>
           </tr>
           <tr>
-            <td>昵称：</td>
+            <td>用户名：</td>
             <td>{{ userInfo.name }}</td>
           </tr>
           <tr>
@@ -48,8 +52,18 @@ watch(() => userInfo.value.isLogged, () => {
             <td>{{ userInfo.email }}</td>
           </tr>
           <tr>
-            <td>权限：</td>
-            <td>{{ getUserStatusText(userInfo).name }}</td>
+            <td>个人主页：</td>
+            <td>{{ userInfo.homepage }}</td>
+          </tr>
+          <tr>
+            <td>创建时间：</td>
+            <td>{{ formatTime(userInfo.createdAt) }}</td>
+          </tr>
+          <tr>
+            <td>角色权限：</td>
+            <td>
+              <UserRoleCell :user="userInfo" size="small" />
+            </td>
           </tr>
         </table>
       </div>

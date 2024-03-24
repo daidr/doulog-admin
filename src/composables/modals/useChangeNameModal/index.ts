@@ -21,7 +21,7 @@ export const useChangeNameModal = () => {
       if (await updateSelfUsername(name.value)) {
         await fetchUserInfo()
         success({
-          content: '昵称修改成功',
+          content: '用户名修改成功',
           duration: 2000
         })
         modal.close()
@@ -32,7 +32,7 @@ export const useChangeNameModal = () => {
   }
 
   const modal = useModal({
-    title: computed(() => '修改昵称'),
+    title: computed(() => '修改用户名'),
     icon: 'i-mingcute-pencil-3-fill',
     content: () => h(BaseInput, {
       min: 1,
@@ -46,13 +46,13 @@ export const useChangeNameModal = () => {
         valid.value = val
       },
       wrapperClass: 'w-full',
-      placeholder: '请输入昵称',
+      placeholder: '请输入用户名',
       disabled: loading.value,
     }),
     cancelText: computed(() => '取消'),
     loading,
     confirmText: computed(() => '修改'),
-    // disabledConfirm: computed(() => !valid.value),
+    disabledConfirm: computed(() => !valid.value),
     onConfirm() {
       handleConfirm()
       return false;

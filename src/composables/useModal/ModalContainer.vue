@@ -83,12 +83,13 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Teleport to="body">
+  <Teleport to="#teleport-container">
     <Transition name="fade">
       <div v-if="maskVisible" class="modal-mask" />
     </Transition>
     <TransitionGroup name="modal" tag="div" class="modal-transition-group">
-      <div v-for="(modal, index) of modals" :key="modal._id" class="transition-transform,filter fixed z-100 top-1/2 left-1/2" :style="{
+      <div v-for="(modal, index) of modals" :key="modal._id"
+        class="transition-transform,filter fixed z-100 top-1/2 left-1/2" :style="{
         transform: `translateY(${getTranslateValue(modals.length - 1 - index)}vh) scale(${getScaleValue(modals.length - 1 - index)})`,
         filter: `brightness(${getBrightnessValue(modals.length - 1 - index)})`,
       }">
