@@ -42,7 +42,7 @@ function userDTO2User(dto: UserInfoDTO): UserInfo {
 }
 
 export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
-  const result = await instance.get<UserInfoDTO>('/api/x/user/v1/get')
+  const result = await instance.get<UserInfoDTO>('/api/x/user/v1')
   if (result.data.id === 0) {
     return {
       isLogged: false
@@ -56,7 +56,7 @@ export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
 }
 
 export async function getUserInfo(uid: number | string): Promise<UserInfo | false> {
-  const result = await instance.get<UserInfoDTO>(`/api/x/user/v1/get/${uid}`)
+  const result = await instance.get<UserInfoDTO>(`/api/x/user/v1/${uid}`)
 
   if (!result) {
     return false;
@@ -67,8 +67,8 @@ export async function getUserInfo(uid: number | string): Promise<UserInfo | fals
 
 
 export async function updateSelfUsername(name: string): Promise<boolean> {
-  const result = await instance.post('/api/x/user/v1/me/change_name', {
-    new_name: name
+  const result = await instance.put('/api/x/user/v1/name', {
+    name
   })
 
   if (!result) {
