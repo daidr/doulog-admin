@@ -29,6 +29,7 @@ instance.interceptors.response.use(
   },
   (err) => {
     console.log("Unexpected api error: ", err.response, err)
+    error({ content: '网络错误', duration: 2000 })
     return Promise.reject(err)
   }
 )

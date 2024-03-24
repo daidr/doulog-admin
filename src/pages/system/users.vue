@@ -78,7 +78,7 @@ async function fetchData(_page: number, _size: number) {
 }
 
 watch(keyword, () => {
-  fetchData(page.value, size.value)
+  fetchData(1, size.value)
 }, { immediate: true })
 
 
@@ -100,6 +100,7 @@ function formatTime(time: number) {
         total,
         size,
         disabled: loading,
+        showSwitch: false,
       }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(page, size)">
       <template #column-name="{ item }">
         <UserNameCell :user="item" />

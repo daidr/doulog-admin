@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { UserInfo } from '@/api/user';
-import BaseBadge from '../base/BaseBadge.vue';
+import BaseBadge, { type BaseBadgeProps } from '../base/BaseBadge.vue';
 
-defineProps<{
+withDefaults(defineProps<{
   user: UserInfo
-}>()
+  size?: BaseBadgeProps['size']
+}>(), {
+  size: 'medium'
+})
 
 function getBadgeType(user: UserInfo) {
   if (user.isAdmin) return 'info'
@@ -27,7 +30,7 @@ function getBadgeIcon(user: UserInfo) {
 
 <template>
   <div class="min-w-full w-0 flex justify-start">
-    <BaseBadge :type="getBadgeType(user)" :icon="getBadgeIcon(user)" size="medium">
+    <BaseBadge :type="getBadgeType(user)" :icon="getBadgeIcon(user)" :size="size">
       {{ getBadgeContent(user) }}
     </BaseBadge>
   </div>

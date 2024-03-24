@@ -16,7 +16,8 @@
     "@unocss/reset": "^0.58.5",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-virtual-scroller": "2.0.0-beta.8"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.8.0",
