@@ -226,13 +226,13 @@ table {
 
 .table-cell-fixed-left-last {
   --normal-shadow: 2px 0 0 0 #0000000b;
-  --active-shadow: 5px 0 0 0 #0000000b;
+  --active-shadow: 5px 0 5px 0 #0000000f;
   box-shadow: var(--normal-shadow), var(--active-shadow);
 }
 
 .table-cell-fixed-right-first {
   --normal-shadow: -2px 0 0 0 #0000000b;
-  --active-shadow: -5px 0 0 0 #0000000b;
+  --active-shadow: -5px 0 5px 0 #0000000f;
   box-shadow: var(--normal-shadow), var(--active-shadow);
 }
 

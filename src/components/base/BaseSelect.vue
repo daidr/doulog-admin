@@ -1,37 +1,57 @@
 <script setup lang="ts">
-import type { InputHTMLAttributes, PropType } from 'vue';
+import type { PropType, SelectHTMLAttributes } from 'vue';
 
-interface BaseInputProps extends /* @vue-ignore */ InputHTMLAttributes {
-  max?: number;
-  min?: number;
-  wrapperClass?: any;
+export interface BaseSelectOptionItem {
+  label: string;
+  value: string | number;
   disabled?: boolean;
 }
 
-const props = defineProps<BaseInputProps>()
+export interface BaseSelectOptionGroup {
+  label: string;
+  options: BaseSelectOptionItem[];
+  disabled?: boolean;
+}
 
-const model = defineModel<string>()
+interface BaseSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
+  wrapperClass?: any;
+  disabled?: boolean;
+  options: (BaseSelectOptionItem | BaseSelectOptionGroup)[];
+  size?: 'small' | 'medium' | 'large';
+}
+
+withDefaults(defineProps<BaseSelectProps>(), {
+  disabled: false,
+  size: 'medium',
+})
+
+const value = defineModel<string | number>()
 </script>
 
 <template>
-  <div class="base-input" :class="[wrapperClass, {
-    'disabled': props.disabled,
-  }]">
-    <input v-bind="$attrs" v-model="model" :disabled="disabled" />
-    <div class="h-0">
-      <div class="length-check" v-if="typeof max === 'number' || typeof min === 'number'" :class="{
-    [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true
-  }">
-        <LengthCheckComp />
-      </div>
-    </div>
+  <div class="base-select" :class="[
+    `size-${size}`,
+    { disabled }
+  ]">
+    <select v-model="value">
+      <template v-for="option of options" :key="option.label">
+        <optgroup v-if="('options' in option)" :label="option.label" :disabled="option.disabled">
+          <option v-for="item of option.options" :key="item.value" :value="item.value" :disabled="item.disabled">
+            {{ item.label }}
+          </option>
+        </optgroup>
+        <option v-else :value="option.value" :disabled="option.disabled">
+          {{ option.label }}
+        </option>
+      </template>
+    </select>
   </div>
 </template>
 
 <style scoped lang="scss">
-.base-input {
+.base-select {
   @apply relative;
-  @apply ring-1 ring-gray-200 rounded-xl;
+  @apply ring-1 ring-gray-200;
   @apply flex items-center;
   @apply bg-white;
   @apply shadow-xl shadow-black/2;
@@ -41,41 +61,37 @@ const model = defineModel<string>()
     @apply opacity-50;
   }
 
+  &:hover,
   &:focus-within {
     @apply ring-gray-300;
   }
 
-  input {
-    @apply rounded-xl;
-    @apply w-full outline-0;
+  select {
+    @apply w-full outline-0 rounded-inherit;
     @apply bg-white;
-    @apply px-2 py-2;
   }
 
-  .length-check {
-    @apply text-gray-400 bg-white text-center whitespace-nowrap;
-    @apply rounded-xl;
-    @apply transform-gpu transition duration-300 -translate-y-1/2;
-    transition-property: height, box-shadow, transform;
+  &.size-small {
+    @apply rounded-1 text-xs;
 
-    &.height-level-1 {
-      --total-height: calc(1.6em + 0.5rem);
+    select {
+      @apply px-0.5 h-5;
     }
+  }
 
-    &.height-level-2 {
-      --total-height: calc(1.6em + 0.5rem + 1.6em);
+  &.size-medium {
+    @apply rounded-2 text-base;
+
+    select {
+      @apply px-1 h-7;
     }
+  }
 
-    :deep(.error) {
-      @apply text-red-600;
-    }
+  &.size-large {
+    @apply rounded-3 text-lg;
 
-    @apply h-[calc(1.6em+0.5rem)] overflow-hidden;
-    @apply py-1 px-2 flex-shrink-0;
-
-    &:hover {
-      @apply shadow-xl scale-150 ring-1 ring-gray-200;
-      @apply h-[var(--total-height)];
+    select {
+      @apply px-2 h-10;
     }
   }
 }
