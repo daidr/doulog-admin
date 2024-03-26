@@ -49,6 +49,7 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
     case "top-left":
     case "top-right":
       top = slotY.value - popoverHeight.value - props.gap
+      // 变成 bottom
       if (top < 0) {
         top = slotY.value + slotHeight.value + props.gap
       }
@@ -57,6 +58,7 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
     case "bottom-left":
     case "bottom-right":
       top = slotY.value + slotHeight.value + props.gap
+      // 变成 top
       if (top + popoverHeight.value > windowHeight.value) {
         top = slotY.value - popoverHeight.value - props.gap
       }
@@ -74,8 +76,10 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
     case "left-top":
     case "right-top":
       top = slotY.value
-      if (top + popoverHeight.value > windowHeight.value) {
-        top = windowHeight.value - popoverHeight.value
+      if (top < 0) {
+        top = slotY.value;
+      } else if (top + popoverHeight.value > windowHeight.value) {
+        top = slotY.value + slotHeight.value - popoverHeight.value
       }
       break
     case "left-bottom":
