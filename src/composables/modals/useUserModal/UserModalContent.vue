@@ -76,5 +76,9 @@ table {
   tr td:first-child {
     @apply pr-2 font-bold;
   }
+
+  td {
+    @apply whitespace-nowrap;
+  }
 }
 </style>

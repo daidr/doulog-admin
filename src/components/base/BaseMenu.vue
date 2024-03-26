@@ -95,7 +95,7 @@ const handleClick = (item: MenuItem) => {
 }
 
 .menu-separator {
-  @apply h-1.5px;
+  @apply h-1px;
   @apply bg-gray-200;
   @apply mx-2;
 }

@@ -1,6 +1,8 @@
 import UserActionMenu from "./UserActionMenu.vue"
 import UserModalContent from "./UserModalContent.vue"
 import { useChangeNameModal } from '../useChangeNameModal';
+import { useChangeEmailModal } from "../useChangeEmailModal";
+import { useChangeHomepageModal } from "../useChangeHomepageModal";
 
 export const useUserModal = () => {
   const userStore = useUserStore()
@@ -24,7 +26,19 @@ export const useUserModal = () => {
             setToken('')
           },
           onUpdateUsername: () => {
-            useChangeNameModal()
+            if (userInfo.value.isLogged) {
+              useChangeNameModal(userInfo.value.id)
+            }
+          },
+          onUpdateEmail: () => {
+            if (userInfo.value.isLogged) {
+              useChangeEmailModal(userInfo.value.id)
+            }
+          },
+          onUpdateHomepage: () => {
+            if (userInfo.value.isLogged) {
+              useChangeHomepageModal(userInfo.value.id)
+            }
           }
         })
       }

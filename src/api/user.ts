@@ -78,6 +78,42 @@ export async function updateSelfUsername(name: string): Promise<boolean> {
   return true;
 }
 
+export async function updateUsername(uid: number, name: string): Promise<boolean> {
+  const result = await instance.put(`/api/x/user/v1/name/${uid}`, {
+    name
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function updateEmail(uid: number, email: string): Promise<boolean> {
+  const result = await instance.put(`/api/x/user/v1/email/${uid}`, {
+    email
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function updateHomepage(uid: number, homepage: string): Promise<boolean> {
+  const result = await instance.put(`/api/x/user/v1/homepage/${uid}`, {
+    homepage
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
+
 
 export async function getUserList(props: {
   keyword?: string,
