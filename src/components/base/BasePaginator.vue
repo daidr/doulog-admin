@@ -116,7 +116,7 @@ const sizerOptions = computed(() => props.pageSizes.map((size) => ({ label: `${s
   @apply select-none;
 
   &.disabled {
-    @apply opacity-50;
+    @apply opacity-50 pointer-events-none;
   }
 
   :deep(.page-item) {
