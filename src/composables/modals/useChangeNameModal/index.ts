@@ -1,25 +1,18 @@
-import { updateUsername } from "@/api/user";
+import { updateUsername, type UserInfo } from "@/api/user";
 import BaseInput from "@/components/base/BaseInput.vue";
 import { useToast } from "@/composables/useToast";
 
-export const useChangeNameModal = (uid: number) => {
-  const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
-  const { fetchUserInfo } = userStore;
-  if (!userInfo.value.isLogged) {
-    return;
-  }
-
+export const useChangeNameModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
   const loading = ref(false)
   const valid = ref(true)
-  const name = ref(userInfo.value.name)
+  const name = ref(user.name)
   const { success } = useToast()
 
   const handleConfirm = async () => {
     loading.value = true
     try {
-      if (await updateUsername(uid, name.value)) {
-        await fetchUserInfo()
+      if (await updateUsername(user.id, name.value)) {
+        await successCb?.();
         success({
           content: '用户名修改成功',
           duration: 2000

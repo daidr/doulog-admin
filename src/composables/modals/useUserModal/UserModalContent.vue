@@ -2,6 +2,8 @@
 import { API_BASE } from '@/utils/env';
 import BaseButton from '@/components/base/BaseButton.vue';
 import UserRoleCell from '@/components/user/UserRoleCell.vue';
+import BaseTextarea from '@/components/base/BaseTextarea.vue';
+import { useChangeMottoModal } from '../useChangeMottoModal';
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
@@ -34,41 +36,47 @@ function formatTime(time: number) {
       icon="i-mingcute-github-line">使用 GitHub 登录</BaseButton>
   </div>
   <div v-else class="flex flex-col gap-2">
-    <div class="flex gap-2 items-start">
-      <img :src="`https://gravatar.loli.net/avatar/${userInfo.emailHash}?size=128`"
-        class="w-15 h-15 rounded-xl ring-gray-200 ring-1">
-      <div class="text-base">
-        <table>
-          <tr>
-            <td>ID：</td>
-            <td>{{ userInfo.id }}</td>
-          </tr>
-          <tr>
-            <td>用户名：</td>
-            <td>{{ userInfo.name }}</td>
-          </tr>
-          <tr>
-            <td>邮箱：</td>
-            <td>{{ userInfo.email }}</td>
-          </tr>
-          <tr>
-            <td>个人主页：</td>
-            <td>{{ userInfo.homepage }}</td>
-          </tr>
-          <tr>
-            <td>创建时间：</td>
-            <td>{{ formatTime(userInfo.createdAt) }}</td>
-          </tr>
-          <tr>
-            <td>角色权限：</td>
-            <td>
-              <UserRoleCell :user="userInfo" size="small" />
-            </td>
-          </tr>
-        </table>
+    <div class="flex flex-col gap-2">
+      <div class="flex gap-2 items-start">
+        <img :src="`https://gravatar.loli.net/avatar/${userInfo.emailHash}?size=128`"
+          class="w-15 h-15 rounded-xl ring-gray-200 ring-1">
+        <div class="text-base">
+          <table>
+            <tr>
+              <td>ID：</td>
+              <td>{{ userInfo.id }}</td>
+            </tr>
+            <tr>
+              <td>用户名：</td>
+              <td>{{ userInfo.name }}</td>
+            </tr>
+            <tr>
+              <td>邮箱：</td>
+              <td>{{ userInfo.email }}</td>
+            </tr>
+            <tr>
+              <td>个人主页：</td>
+              <td>{{ userInfo.homepage }}</td>
+            </tr>
+            <tr>
+              <td>创建时间：</td>
+              <td>{{ formatTime(userInfo.createdAt) }}</td>
+            </tr>
+            <tr>
+              <td>角色权限：</td>
+              <td>
+                <UserRoleCell :user="userInfo" size="small" />
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
+    <div @click="useChangeMottoModal(userInfo, userStore.fetchUserInfo)">
+      <BaseTextarea placeholder="这个人什么都没有留下～" disabled :model-value="userInfo.motto" />
+    </div>
   </div>
+
 </template>
 
 <style scoped>

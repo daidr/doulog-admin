@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue';
 
-const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage']);
+const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage', 'updateMotto']);
 
 const menu: Menu = [
   {
@@ -26,6 +26,14 @@ const menu: Menu = [
       emit('updateHomepage');
     },
     icon: 'i-mingcute-link-line',
+    type: 'item'
+  },
+  {
+    label: '修改座右铭',
+    onClick: () => {
+      emit('updateMotto');
+    },
+    icon: 'i-mingcute-textbox-line',
     type: 'item'
   },
   {

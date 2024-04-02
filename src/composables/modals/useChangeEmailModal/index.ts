@@ -1,25 +1,18 @@
-import { updateEmail } from "@/api/user";
+import { updateEmail, type UserInfo } from "@/api/user";
 import BaseInput from "@/components/base/BaseInput.vue";
 import { useToast } from "@/composables/useToast";
 
-export const useChangeEmailModal = (uid: number) => {
-  const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
-  const { fetchUserInfo } = userStore;
-  if (!userInfo.value.isLogged) {
-    return;
-  }
-
+export const useChangeEmailModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
   const loading = ref(false)
   const valid = ref(true)
-  const email = ref(userInfo.value.email)
+  const email = ref(user.email)
   const { success } = useToast()
 
   const handleConfirm = async () => {
     loading.value = true
     try {
-      if (await updateEmail(uid, email.value)) {
-        await fetchUserInfo()
+      if (await updateEmail(user.id, email.value)) {
+        await successCb?.();
         success({
           content: '邮箱修改成功',
           duration: 2000

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getUserList, type UserInfo } from '@/api/user';
-import BaseBadge from '@/components/base/BaseBadge.vue';
 import BaseEllipsisText from '@/components/base/BaseEllipsisText.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
 import BaseTable from '@/components/base/BaseTable.vue';
@@ -13,6 +12,10 @@ const userTableColumns = computed(() => [{
   key: 'name',
   width: 'min(300px, 30vw)',
   fixed: true,
+}, {
+  label: '#',
+  key: 'id',
+  width: 100,
 }, {
   label: '邮箱',
   key: 'email',
@@ -81,7 +84,9 @@ watch(keyword, () => {
   fetchData(1, size.value)
 }, { immediate: true })
 
-
+const refresh = async () => {
+  await fetchData(page.value, size.value)
+}
 
 function formatTime(time: number) {
   return useDateFormat(time * 1000, 'YYYY-MM-DD HH:mm:ss').value
@@ -101,7 +106,7 @@ function formatTime(time: number) {
         size,
         disabled: loading,
         showSwitch: false,
-      }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(page, size)">
+      }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(1, size)">
       <template #column-name="{ item }">
         <UserNameCell :user="item" />
       </template>
@@ -119,7 +124,7 @@ function formatTime(time: number) {
       </template>
       <template #column-_action="{ item }">
         <div class="flex justify-center">
-          <UserPageEditMenu :user="item" />
+          <UserPageEditMenu :user="item" :refresh="refresh" />
         </div>
       </template>
     </BaseTable>

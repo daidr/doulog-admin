@@ -3,11 +3,12 @@ import UserModalContent from "./UserModalContent.vue"
 import { useChangeNameModal } from '../useChangeNameModal';
 import { useChangeEmailModal } from "../useChangeEmailModal";
 import { useChangeHomepageModal } from "../useChangeHomepageModal";
+import { useChangeMottoModal } from "../useChangeMottoModal";
 
 export const useUserModal = () => {
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
-  const { setToken } = userStore
+  const { setToken, fetchUserInfo } = userStore
   return useModal({
     title: computed(() => userInfo.value.isLogged ? '管理' : '登录'),
     icon: 'i-mingcute-user-4-fill',
@@ -27,17 +28,30 @@ export const useUserModal = () => {
           },
           onUpdateUsername: () => {
             if (userInfo.value.isLogged) {
-              useChangeNameModal(userInfo.value.id)
+              useChangeNameModal(userInfo.value, async () => {
+                await fetchUserInfo()
+              })
             }
           },
           onUpdateEmail: () => {
             if (userInfo.value.isLogged) {
-              useChangeEmailModal(userInfo.value.id)
+              useChangeEmailModal(userInfo.value, async () => {
+                await fetchUserInfo()
+              })
             }
           },
           onUpdateHomepage: () => {
             if (userInfo.value.isLogged) {
-              useChangeHomepageModal(userInfo.value.id)
+              useChangeHomepageModal(userInfo.value, async () => {
+                await fetchUserInfo()
+              })
+            }
+          },
+          onUpdateMotto: () => {
+            if (userInfo.value.isLogged) {
+              useChangeMottoModal(userInfo.value, async () => {
+                await fetchUserInfo()
+              })
             }
           }
         })

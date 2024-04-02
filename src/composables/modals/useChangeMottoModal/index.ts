@@ -1,20 +1,20 @@
-import { updateHomepage, type UserInfo } from "@/api/user";
-import BaseInput from "@/components/base/BaseInput.vue";
+import { updateMotto, type UserInfo } from "@/api/user";
+import BaseTextarea from "@/components/base/BaseTextarea.vue";
 import { useToast } from "@/composables/useToast";
 
-export const useChangeHomepageModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
+export const useChangeMottoModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
   const loading = ref(false)
   const valid = ref(true)
-  const homepage = ref(user.homepage)
+  const motto = ref(user.motto)
   const { success } = useToast()
 
   const handleConfirm = async () => {
     loading.value = true
     try {
-      if (await updateHomepage(user.id, homepage.value)) {
+      if (await updateMotto(user.id, motto.value || '')) {
         await successCb?.()
         success({
-          content: '主页修改成功',
+          content: '座右铭修改成功',
           duration: 2000
         })
         modal.close()
@@ -25,21 +25,23 @@ export const useChangeHomepageModal = (user: UserInfo, successCb?: () => void | 
   }
 
   const modal = useModal({
-    title: computed(() => '修改主页'),
+    title: computed(() => '修改座右铭'),
     icon: 'i-mingcute-pencil-3-fill',
-    content: () => h(BaseInput, {
-      min: 1,
-      max: 99,
-      modelValue: homepage.value,
+    content: () => h(BaseTextarea, {
+      max: 300,
+      modelValue: motto.value,
       'onUpdate:modelValue': (val: string) => {
-        homepage.value = val
+        motto.value = val
       },
       valid: valid.value,
       'onUpdate:valid': (val: boolean) => {
         valid.value = val
       },
+      style: {
+        maxHeight: '80vh'
+      },
       wrapperClass: 'w-full',
-      placeholder: '请输入主页',
+      placeholder: '这个人什么都没留下～',
       disabled: loading.value,
     }),
     cancelText: computed(() => '取消'),
