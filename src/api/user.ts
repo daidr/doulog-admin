@@ -8,6 +8,7 @@ interface UserInfoDTO {
   homepage: string
   is_admin: boolean
   is_banned: boolean
+  motto?: string
   created_at: number
 }
 
@@ -19,6 +20,7 @@ export interface UserInfo {
   homepage: string
   isAdmin: boolean
   isBanned: boolean
+  motto?: string
   createdAt: number
 }
 
@@ -35,6 +37,7 @@ function userDTO2User(dto: UserInfoDTO): UserInfo {
     email: dto.email,
     emailHash: dto.email_hash,
     homepage: dto.homepage,
+    motto: dto.motto,
     isAdmin: dto.is_admin,
     isBanned: dto.is_banned,
     createdAt: dto.created_at
@@ -114,6 +117,17 @@ export async function updateHomepage(uid: number, homepage: string): Promise<boo
   return true;
 }
 
+export async function updateMotto(uid: number, motto: string): Promise<boolean> {
+  const result = await instance.put(`/api/x/user/v1/motto/${uid}`, {
+    motto
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
 
 export async function getUserList(props: {
   keyword?: string,
