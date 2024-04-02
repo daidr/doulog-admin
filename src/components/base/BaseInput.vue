@@ -24,6 +24,8 @@ watch(() => model.value, () => {
   }
 
   modelValid.value = temp;
+}, {
+  immediate: true
 })
 
 const LengthTextComp = defineComponent((textProps) => () => h('div', {
