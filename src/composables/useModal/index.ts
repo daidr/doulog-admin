@@ -89,3 +89,13 @@ export function useModal(props: UseModalProps) {
     },
   }
 }
+
+if (import.meta.env.DEV) {
+  window.useModal = useModal
+}
+
+declare global {
+  interface Window {
+    useModal: typeof useModal
+  }
+}
