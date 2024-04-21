@@ -91,17 +91,7 @@ const scrollHandler = () => {
   }
 }
 
-onMounted(() => {
-  if (TableBodyRef.value) {
-    TableBodyRef.value.addEventListener('scroll', scrollHandler, { passive: true })
-  }
-})
-
-onUnmounted(() => {
-  if (TableBodyRef.value) {
-    TableBodyRef.value.removeEventListener('scroll', scrollHandler)
-  }
-})
+useEventListener(TableBodyRef, 'scroll', scrollHandler, { passive: true })
 
 watch(width, () => {
   scrollHandler()
@@ -117,24 +107,24 @@ watch(width, () => {
   </DefineColGroup>
   <div v-bind="$attrs" class="table-scroll">
     <div class="table-container" :class="[{
-        [`table-scroll-left`]: currentScrollState === 'left',
-        [`table-scroll-right`]: currentScrollState === 'right',
-        [`table-scroll-none`]: currentScrollState === 'none',
-      }, tableClass]">
+      [`table-scroll-left`]: currentScrollState === 'left',
+      [`table-scroll-right`]: currentScrollState === 'right',
+      [`table-scroll-none`]: currentScrollState === 'none',
+    }, tableClass]">
       <div ref="TableHeadRef" class="table-head">
         <table :style="{
-        maxHeight: normalizeSize(scrollHeight),
-        maxWidth: normalizeSize(scrollWidth),
-      }">
+          maxHeight: normalizeSize(scrollHeight),
+          maxWidth: normalizeSize(scrollWidth),
+        }">
           <ReuseColGroup />
           <thead>
             <tr class="table-row">
               <th class="table-row-head" v-for="column of columns" :key="column.key" :class="{
-        [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
-        [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
-        [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
-        [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
-      }">
+                [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
+                [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
+                [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
+                [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
+              }">
                 {{ column.label }}
               </th>
             </tr>
@@ -145,17 +135,17 @@ watch(width, () => {
         maxHeight: normalizeSize(scrollHeight),
       }">
         <table :style="{
-        maxWidth: normalizeSize(scrollWidth),
-      }">
+          maxWidth: normalizeSize(scrollWidth),
+        }">
           <ReuseColGroup />
           <tbody>
             <tr class="table-row" v-for="item of data" :key="item[props.rowKey]">
               <td class="table-row-data" v-for="column of columns" :key="column.key" :class="{
-        [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
-        [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
-        [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
-        [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
-      }">
+                [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
+                [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
+                [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
+                [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
+              }">
                 <template v-if="$slots[`column-${column.key}`]">
                   <slot :name="`column-${column.key}`" :item="item" :key="column.key" />
                 </template>
@@ -173,10 +163,10 @@ watch(width, () => {
     <div v-if="paginator" class="paginator-container" :class="[paginatorClass]">
       <div class="paginator-tips">
         显示第 {{ (paginator.current - 1) * paginator.size + 1 }} 到 {{ Math.min(paginator.current * paginator.size,
-        paginator.total) }} 条，共 {{ paginator.total }} 条
+          paginator.total) }} 条，共 {{ paginator.total }} 条
       </div>
-      <BasePaginator v-bind="paginator" @page-change="($event) => $emit('page-change', $event)"
-        @size-change="($event) => $emit('size-change', $event)" />
+      <BasePaginator v-bind="paginator" @page-change="$emit('page-change', $event)"
+        @size-change="$emit('size-change', $event)" />
     </div>
   </div>
 </template>

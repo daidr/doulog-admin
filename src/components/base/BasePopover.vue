@@ -4,7 +4,7 @@ import { ref } from 'vue';
 const props = withDefaults(defineProps<{
   position?: "top" | "top-left" | "top-right" | "bottom" | "bottom-left" | "bottom-right" | "left" | "left-top" | "left-bottom" | "right" | "right-top" | "right-bottom",
   gap?: number,
-  trigger?: "click" | "hover",
+  trigger?: "click" | "hover" | "manual",
 }>(), {
   position: "left-top",
   gap: 10,
@@ -16,8 +16,7 @@ defineSlots<{
   content(): any
 }>()
 
-const open = defineModel("open", {
-  type: Boolean,
+const open = defineModel<boolean>("open", {
   default: false,
 })
 
@@ -102,8 +101,8 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
         left = slotX.value + slotWidth.value - popoverWidth.value
       }
       break
-    case "top-left":
-    case "bottom-left":
+    case "top-right":
+    case "bottom-right":
       left = slotX.value + slotWidth.value - popoverWidth.value
       if (left < 0) {
         left = slotX.value
@@ -115,8 +114,8 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
         left = slotX.value + slotWidth.value + props.gap
       }
       break
-    case "top-right":
-    case "bottom-right":
+    case "top-left":
+    case "bottom-left":
       left = slotX.value
       if (left + popoverWidth.value > windowWidth.value) {
         left = slotX.value + slotWidth.value - popoverWidth.value
@@ -160,31 +159,48 @@ onUnmounted(() => {
   clearTimeout(hoverCloseTimer)
 })
 
+const emit = defineEmits<{
+  'try-open': []
+  'try-close': []
+}>()
+
 useEventListener(SlotRef, "mouseenter", () => {
-  if (props.trigger === "hover") {
+  if (props.trigger === "hover" || props.trigger === "manual") {
     clearTimeout(hoverCloseTimer)
-    open.value = true
+    if (props.trigger === "hover") {
+      open.value = true
+    } else {
+      emit('try-open')
+    }
   }
 })
 
 useEventListener(SlotRef, "mouseleave", () => {
-  if (props.trigger === "hover") {
+  if (props.trigger === "hover" || props.trigger === "manual") {
     hoverCloseTimer = setTimeout(() => {
-      open.value = false
+      if (props.trigger === "hover") {
+        open.value = false
+      } else {
+        emit('try-close')
+      }
     }, 200)
   }
 })
 
 useEventListener(PopoverRef, "mouseenter", () => {
-  if (props.trigger === "hover") {
+  if (props.trigger === "hover" || props.trigger === "manual") {
     clearTimeout(hoverCloseTimer)
   }
 })
 
 useEventListener(PopoverRef, "mouseleave", () => {
-  if (props.trigger === "hover") {
+  if (props.trigger === "hover" || props.trigger === "manual") {
     hoverCloseTimer = setTimeout(() => {
-      open.value = false
+      if (props.trigger === "hover") {
+        open.value = false
+      } else {
+        emit('try-close')
+      }
     }, 200)
   }
 })
@@ -197,9 +213,9 @@ useEventListener(PopoverRef, "mouseleave", () => {
   <Teleport to="#teleport-container">
     <Transition name="fade">
       <div v-if="open" ref="PopoverRef" class="base-popover" :style="{
-    top: `${popoverPosition.top}px`,
-    left: `${popoverPosition.left}px`
-  }">
+        top: `${popoverPosition.top}px`,
+        left: `${popoverPosition.left}px`
+      }">
         <slot name="content" />
       </div>
     </Transition>

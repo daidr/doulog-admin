@@ -30,10 +30,11 @@ defineProps<BaseButtonProps>()
 
 <style scoped lang="scss">
 button {
-  @apply py-1.5 px-5 rounded-3;
+  @apply py-1.5 px-5 rounded-3 relative;
   @apply cursor-pointer;
-  @apply whitespace-nowrap relative;
+  @apply whitespace-nowrap;
   @apply transition;
+
   transition-property: opacity, box-shadow;
   --bg-color: #303846;
 
