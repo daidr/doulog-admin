@@ -6,6 +6,7 @@ import BaseTable from '@/components/base/BaseTable.vue';
 import UserNameCell from '@/components/user/UserNameCell.vue';
 import UserPageEditMenu from '@/components/user/UserPageEditMenu.vue';
 import UserRoleCell from '@/components/user/UserRoleCell.vue';
+import { formatTime } from '@/utils/time';
 
 const userTableColumns = computed(() => [{
   label: '用户名',
@@ -86,10 +87,6 @@ watch(keyword, () => {
 
 const refresh = async () => {
   await fetchData(page.value, size.value)
-}
-
-function formatTime(time: number) {
-  return useDateFormat(time * 1000, 'YYYY-MM-DD HH:mm:ss').value
 }
 </script>
 
