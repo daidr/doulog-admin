@@ -9,12 +9,20 @@ const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
 const loginProcessing = ref(false)
 
-const handleLogin = () => {
+const handleGitHubLogin = () => {
   loginProcessing.value = true
   // /login
   const frontendCallback = new URL('/login', window.location.origin).href
-  const backendUrl = new URL('/api/auth/login/v1/go', API_BASE)
+  const backendUrl = new URL('/api/auth/login/go', API_BASE)
   backendUrl.searchParams.set('platform', 'github')
+  backendUrl.searchParams.set('callback', frontendCallback)
+  window.open(backendUrl, "_blank", "popup, width=600, height=600, location=no")
+}
+
+const handleDemoLogin = () => {
+  loginProcessing.value = true
+  const frontendCallback = new URL('/login', window.location.origin).href
+  const backendUrl = new URL('/api/auth/login/demo', API_BASE)
   backendUrl.searchParams.set('callback', frontendCallback)
   window.open(backendUrl, "_blank", "popup, width=600, height=600, location=no")
 }
@@ -31,9 +39,11 @@ function formatTime(time: number) {
 </script>
 
 <template>
-  <div v-if="!userInfo.isLogged">
-    <BaseButton @click="handleLogin" color="#303846" :loading="loginProcessing" class="w-full font-bold text-xl"
+  <div v-if="!userInfo.isLogged" class="gap-2 flex flex-col">
+    <BaseButton @click="handleGitHubLogin" color="#303846" :loading="loginProcessing" class="w-full font-bold text-xl"
       icon="i-mingcute-github-line">使用 GitHub 登录</BaseButton>
+    <BaseButton @click="handleDemoLogin" color="#0a2e8f" :loading="loginProcessing" class="w-full font-bold text-xl">
+      演示用户</BaseButton>
   </div>
   <div v-else class="flex flex-col gap-2">
     <div class="flex flex-col gap-2">
@@ -43,27 +53,27 @@ function formatTime(time: number) {
         <div class="text-base">
           <table>
             <tr>
-              <td>ID：</td>
+              <td>ID</td>
               <td>{{ userInfo.id }}</td>
             </tr>
             <tr>
-              <td>用户名：</td>
+              <td>用户名</td>
               <td>{{ userInfo.name }}</td>
             </tr>
             <tr>
-              <td>邮箱：</td>
+              <td>邮箱</td>
               <td>{{ userInfo.email }}</td>
             </tr>
             <tr>
-              <td>个人主页：</td>
+              <td>个人主页</td>
               <td>{{ userInfo.homepage }}</td>
             </tr>
             <tr>
-              <td>创建时间：</td>
+              <td>创建时间</td>
               <td>{{ formatTime(userInfo.createdAt) }}</td>
             </tr>
             <tr>
-              <td>角色权限：</td>
+              <td>角色权限</td>
               <td>
                 <UserRoleCell :user="userInfo" size="small" />
               </td>
@@ -72,11 +82,10 @@ function formatTime(time: number) {
         </div>
       </div>
     </div>
-    <div @click="useChangeMottoModal(userInfo, userStore.fetchUserInfo)">
+    <div @click="useChangeMottoModal(userInfo, userStore.fetchUserInfo)" class="cursor-text">
       <BaseTextarea placeholder="这个人什么都没有留下～" disabled :model-value="userInfo.motto" />
     </div>
   </div>
-
 </template>
 
 <style scoped>

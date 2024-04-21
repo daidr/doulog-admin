@@ -45,18 +45,18 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="relative h-[calc(100%-0.5rem)] transform-gpu transition-transform duration-300" :class="{
-    'translate-x-[calc(-100%)]': smAndSmaller && !showOnMobile,
-  }" :style="{
-    '--content-width': isNavExpanded ? maxContentWidth + 'px' : undefined
+  <div class="relative h-[calc(100%-0.5rem)] transition-margin duration-300" :style="{
+    '--content-width': isNavExpanded ? maxContentWidth + 'px' : undefined,
+    'margin-left': smAndSmaller && !showOnMobile ? `-${maxContentWidth + 4}px` : undefined,
   }" ref="MainNavWrapperRef">
     <div v-if="smAndSmaller" class="mobile-button" @click.prevent="showOnMobile = !showOnMobile">
       <div v-if="showOnMobile" class="i-mingcute-arrows-left-line"></div>
       <div v-else class="i-mingcute-arrows-right-line"></div>
     </div>
     <nav class="main-nav" ref="MainNavRef" :class="{
-    'expanded': isNavExpanded,
-  }">
+      'expanded': isNavExpanded,
+      'shadow-xl': showOnMobile || (!smAndSmaller && isNavExpanded),
+    }">
       <div class="w-max h-full flex flex-col justify-between" ref="MainNavContentRef">
         <div class="max-h-[calc(100%-60px)] flex-grow flex flex-col">
           <LinkItem to="/">
@@ -136,7 +136,6 @@ const route = useRoute()
 
   &.expanded {
     @apply w-[var(--content-width)];
-    @apply shadow-xl;
 
     :deep(.hide-on-collapse) {
       animation: none;
