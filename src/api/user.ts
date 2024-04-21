@@ -1,17 +1,5 @@
 import { instance } from "@/utils/axios";
 
-interface UserInfoDTO {
-  id: number
-  name: string
-  email: string
-  email_hash: string
-  homepage: string
-  is_admin: boolean
-  is_banned: boolean
-  motto?: string
-  created_at: number
-}
-
 export interface UserInfo {
   id: number
   name: string
@@ -30,22 +18,8 @@ export type UserInfoWithLogged = UserInfo & {
   isLogged: false
 }
 
-function userDTO2User(dto: UserInfoDTO): UserInfo {
-  return {
-    id: dto.id,
-    name: dto.name,
-    email: dto.email,
-    emailHash: dto.email_hash,
-    homepage: dto.homepage,
-    motto: dto.motto,
-    isAdmin: dto.is_admin,
-    isBanned: dto.is_banned,
-    createdAt: dto.created_at
-  }
-}
-
 export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
-  const result = await instance.get<UserInfoDTO>('/api/x/user/v1')
+  const result = await instance.get<UserInfo>('/api/x/user')
   if (result.data.id === 0) {
     return {
       isLogged: false
@@ -54,23 +28,23 @@ export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
 
   return {
     isLogged: true,
-    ...userDTO2User(result.data)
+    ...result.data
   }
 }
 
 export async function getUserInfo(uid: number | string): Promise<UserInfo | false> {
-  const result = await instance.get<UserInfoDTO>(`/api/x/user/v1/${uid}`)
+  const result = await instance.get<UserInfo>(`/api/x/user/${uid}`)
 
   if (!result) {
     return false;
   }
 
-  return userDTO2User(result.data)
+  return result.data
 }
 
 
 export async function updateSelfUsername(name: string): Promise<boolean> {
-  const result = await instance.put('/api/x/user/v1/name', {
+  const result = await instance.put('/api/x/user/name', {
     name
   })
 
@@ -82,7 +56,7 @@ export async function updateSelfUsername(name: string): Promise<boolean> {
 }
 
 export async function updateUsername(uid: number, name: string): Promise<boolean> {
-  const result = await instance.put(`/api/x/user/v1/name/${uid}`, {
+  const result = await instance.put(`/api/x/user/name/${uid}`, {
     name
   })
 
@@ -94,7 +68,7 @@ export async function updateUsername(uid: number, name: string): Promise<boolean
 }
 
 export async function updateEmail(uid: number, email: string): Promise<boolean> {
-  const result = await instance.put(`/api/x/user/v1/email/${uid}`, {
+  const result = await instance.put(`/api/x/user/email/${uid}`, {
     email
   })
 
@@ -106,7 +80,7 @@ export async function updateEmail(uid: number, email: string): Promise<boolean> 
 }
 
 export async function updateHomepage(uid: number, homepage: string): Promise<boolean> {
-  const result = await instance.put(`/api/x/user/v1/homepage/${uid}`, {
+  const result = await instance.put(`/api/x/user/homepage/${uid}`, {
     homepage
   })
 
@@ -118,7 +92,7 @@ export async function updateHomepage(uid: number, homepage: string): Promise<boo
 }
 
 export async function updateMotto(uid: number, motto: string): Promise<boolean> {
-  const result = await instance.put(`/api/x/user/v1/motto/${uid}`, {
+  const result = await instance.put(`/api/x/user/motto/${uid}`, {
     motto
   })
 
@@ -139,7 +113,7 @@ export async function getUserList(props: {
 } | false> {
   const { keyword, page = 1, size = 10 } = props;
 
-  const result = await instance.get('/api/x/user/v1/list', {
+  const result = await instance.get('/api/x/user/list', {
     params: {
       keyword,
       page,
@@ -153,6 +127,6 @@ export async function getUserList(props: {
 
   return {
     total: result.data.total,
-    list: result.data.list.map(userDTO2User)
+    list: result.data.list
   }
 }
