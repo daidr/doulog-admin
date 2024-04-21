@@ -35,7 +35,11 @@ export default defineConfig({
     port: 3003,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: 'http://debug.daidr.dn11:3000',
+        changeOrigin: true,
+      },
+      '/store': {
+        target: 'http://debug.daidr.dn11:3000',
         changeOrigin: true,
       }
     }
