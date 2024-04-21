@@ -16,8 +16,8 @@ defineEmits(['cancel', 'confirm'])
   <div class="common-modal">
     <div class="common-modal-modal">
       <div v-if="info.title" class="p-1.5 bg-gray-300 flex self-start items-center gap-1 rounded-full text-gray-800">
-        <div v-if="info.icon" class="text-2xl lh-0 h-6" :class="[toValue(info.icon)]"></div>
-        <RenderComponent :node="info.title" className="font-extrabold h-6 pr-0.5" />
+        <div v-if="info.icon" class="text-2xl h-6 lh-150%" :class="[toValue(info.icon)]"></div>
+        <RenderComponent :node="info.title" className="font-extrabold h-6 pr-0.5 lh-150%" />
       </div>
       <template v-if="info.content">
         <RenderComponent :node="info.content" className="text-center font-bold text-xl" />
