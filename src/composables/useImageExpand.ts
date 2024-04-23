@@ -1,7 +1,5 @@
-let lastUpdate = 0
-const MIN = 1
-const MAX = 9
-let current = MIN
+const TOP = 8
+const INTERMEDIATE = 6
 
 export default function useImageExpand(delay: number = 500) {
   const zIndex = ref<number | undefined>(undefined)
@@ -9,19 +7,15 @@ export default function useImageExpand(delay: number = 500) {
   let timer: NodeJS.Timeout
 
   function show() {
-    const now = Date.now()
     clearTimeout(timer)
-    if (now - lastUpdate > delay || current > MAX) {
-      current = MIN
-    }
-    lastUpdate = now
-    zIndex.value = current++
+    zIndex.value = TOP
     expanded.value = true
   }
 
   function hide() {
-    lastUpdate = Date.now()
+    clearTimeout(timer)
     expanded.value = false
+    zIndex.value = INTERMEDIATE
     timer = setTimeout(() => {
       zIndex.value = undefined
     }, delay)

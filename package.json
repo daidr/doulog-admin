@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test:unit": "vitest",
@@ -13,35 +13,35 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@unocss/reset": "^0.59.0",
+    "@unocss/reset": "^0.59.4",
     "pinia": "^2.1.7",
     "pretty-bytes": "^6.1.1",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
+    "vue": "^3.4.23",
+    "vue-router": "^4.3.2",
     "vue-virtual-scroller": "2.0.0-beta.8"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.12.2",
+    "@antfu/eslint-config": "^2.15.0",
     "@iconify-json/mingcute": "^1.1.17",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.6",
-    "@types/node": "^20.12.5",
+    "@types/node": "^20.12.7",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/test-utils": "^2.4.5",
     "@vue/tsconfig": "^0.5.1",
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
-    "eslint": "^9.0.0",
+    "eslint": "^9.1.0",
     "jsdom": "^24.0.0",
     "npm-run-all2": "^6.1.2",
-    "sass": "^1.74.1",
-    "typescript": "~5.4.4",
-    "unocss": "^0.59.0",
+    "sass": "^1.75.0",
+    "typescript": "~5.4.5",
+    "unocss": "^0.59.4",
     "unplugin-auto-import": "^0.17.5",
-    "unplugin-vue-router": "^0.8.5",
-    "vite": "^5.2.8",
-    "vitest": "^1.4.0",
-    "vue-tsc": "^2.0.10"
+    "unplugin-vue-router": "^0.8.6",
+    "vite": "^5.2.10",
+    "vitest": "^1.5.0",
+    "vue-tsc": "^2.0.14"
   }
 }

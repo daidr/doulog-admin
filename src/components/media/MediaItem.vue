@@ -2,6 +2,7 @@
 import type { MediaInfo } from '@/api/media';
 import useImageExpand from '@/composables/useImageExpand';
 import prettyBytes from 'pretty-bytes';
+import MediaMetaContainer from './MediaMetaContainer.vue';
 
 const props = defineProps<{
   media: MediaInfo
@@ -12,8 +13,6 @@ const props = defineProps<{
 }>()
 
 const currentActive = ref<HTMLElement | null>(null)
-const DescRef = ref<HTMLElement | null>(null)
-const MetaRef = ref<HTMLElement | null>(null)
 
 const tinyMode = computed(() => props.imageSize < 150)
 
@@ -144,16 +143,6 @@ function handleLeave() {
   transform.value = [0, 0]
   hide()
 }
-
-function handleBlockEnter(event: MouseEvent) {
-  if (tinyMode.value) return
-  currentActive.value = event.target as HTMLElement
-}
-
-function handleBlockLeave(event: MouseEvent) {
-  if (tinyMode.value) return
-  currentActive.value = null
-}
 </script>
 
 <template>
@@ -168,20 +157,14 @@ function handleBlockLeave(event: MouseEvent) {
       zIndex,
       transform: `translate(${transform[0]}px, ${transform[1]}px)`,
     }">
-      <div ref="MetaRef" v-if="!tinyMode" class="meta info-block" @mouseenter="handleBlockEnter"
-        @mouseleave="handleBlockLeave" :class="{
-          'opacity-0': currentActive && currentActive !== MetaRef
-        }">
+      <MediaMetaContainer v-if="!tinyMode" class="meta" v-model="currentActive">
         {{ media.width }} x {{ media.height }} | {{ media.ext.toUpperCase() }}
-      </div>
+      </MediaMetaContainer>
       <div class="image">
         <img :src="imageSource" :title="media.title" :alt="media.alt" :style="{
           backgroundColor: `#${media.prominentColor[0]}`
         }" />
-        <div ref="DescRef" v-if="!tinyMode" class="desc info-block" @mouseenter="handleBlockEnter"
-          @mouseleave="handleBlockLeave" :class="{
-            'important-opacity-0': currentActive && currentActive !== DescRef
-          }">
+        <MediaMetaContainer v-if="!tinyMode" class="desc" v-model="currentActive">
           <table>
             <tr>
               <td>Title</td>
@@ -215,7 +198,7 @@ function handleBlockLeave(event: MouseEvent) {
               </td>
             </tr>
           </table>
-        </div>
+        </MediaMetaContainer>
       </div>
     </div>
   </div>
@@ -243,12 +226,7 @@ function handleBlockLeave(event: MouseEvent) {
   }
 
   .meta {
-    @apply absolute top-2 left-2 bg-white/70 text-black py-1 px-2 z-2;
-    @apply backdrop-blur-md backdrop-contrast-150;
-    @apply rounded-3;
-    @apply text-xs;
-    @apply ring-1 ring-gray/20;
-    @apply transition-opacity duration-400;
+    @apply absolute top-2 left-2;
   }
 
   &.expanded {
@@ -262,14 +240,9 @@ function handleBlockLeave(event: MouseEvent) {
   }
 
   .desc {
-    @apply absolute bottom-2 left-2 right-2 z-2;
-    @apply p-1 rounded-3 text-xs;
-    @apply bg-white/70 text-black;
-    @apply ring-1 ring-gray/20;
+    @apply absolute bottom-2 left-2 right-2;
 
-    @apply transition duration-400 transform-gpu opacity-0 translate-y-100%;
-    @apply will-change-opacity;
-    @apply backdrop-blur-md backdrop-contrast-150;
+    @apply transform-gpu opacity-0 translate-y-100%;
 
     tr {
       td:first-child {
