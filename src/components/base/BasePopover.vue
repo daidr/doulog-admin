@@ -153,7 +153,7 @@ const handleSlotClick = () => {
   }
 }
 
-let hoverCloseTimer: NodeJS.Timeout;
+let hoverCloseTimer: number;
 
 onUnmounted(() => {
   clearTimeout(hoverCloseTimer)

@@ -4,7 +4,7 @@ const INTERMEDIATE = 6
 export default function useImageExpand(delay: number = 500) {
   const zIndex = ref<number | undefined>(undefined)
   const expanded = ref(false)
-  let timer: NodeJS.Timeout
+  let timer: number
 
   function show() {
     clearTimeout(timer)

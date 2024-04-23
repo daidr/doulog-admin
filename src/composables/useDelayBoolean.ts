@@ -1,7 +1,7 @@
 import type { MaybeRefOrGetter } from "vue";
 
 export const useDelayRef = (value: MaybeRefOrGetter<boolean>, delay: number, init: boolean) => {
-  let timer: NodeJS.Timeout;
+  let timer: number;
   let lastValue = ref(init);
 
   watch(computed(() => toValue(value)), (val) => {
