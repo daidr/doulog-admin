@@ -29,7 +29,7 @@ function getBadgeIcon(user: UserInfo) {
 </script>
 
 <template>
-  <div class="min-w-full w-0 flex justify-start">
+  <div class="flex justify-start">
     <BaseBadge :type="getBadgeType(user)" :icon="getBadgeIcon(user)" :size="size">
       {{ getBadgeContent(user) }}
     </BaseBadge>

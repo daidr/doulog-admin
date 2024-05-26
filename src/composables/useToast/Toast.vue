@@ -83,7 +83,7 @@ onUnmounted(() => {
     @apply transition;
     @apply opacity-0;
     @apply w-5 h-5 bg-white ring-1 rounded-md ring-gray-200 flex items-center justify-center;
-    @apply absolute top-1/2 right-1/2 transform translate-x-1/2 -translate-y-1/2;
+    @apply absolute top-1/2 right-1/2 transform-gpu translate-x-1/2 -translate-y-1/2;
     @apply cursor-pointer;
 
     &:hover {

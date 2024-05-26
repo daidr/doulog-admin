@@ -17,7 +17,7 @@ const route = useRoute()
     'sm:pl-18': !route.meta.hideNav
   }">
     <RouterView v-if="route.meta.skipAuth || (userInfo.isLogged && userInfo.isAdmin)" />
-    <div v-else class="w-full h-screen flex flex-col items-center justify-center text-gray-600 gap-2">
+    <div v-else class="w-full h-100dvh flex flex-col items-center justify-center text-gray-600 gap-2">
       <VectorLogo class="w-32 h-32 mx-auto" />
       <p class="text-xl font-bold">DouLog Admin</p>
       <p class="text-xl font-bold">你必须登录且拥有管理员身份才能访问</p>

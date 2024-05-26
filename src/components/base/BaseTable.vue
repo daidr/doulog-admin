@@ -30,8 +30,6 @@ const normalizeSize = (size: number | string | undefined) => {
   return size;
 };
 
-const [DefineColGroup, ReuseColGroup] = createReusableTemplate()
-
 defineSlots<{
   [x: `column-${string}`]: (props: { item: T, key: string }) => any;
 }>()
@@ -73,14 +71,18 @@ const TableBodyRef = ref<HTMLElement | null>(null)
 const currentScrollState = ref<'none' | 'left' | 'middle' | 'right'>('none')
 const { width } = useElementBounding(TableBodyRef)
 
+const tableBodyScrollbarWidth = ref<number>(0)
+
 const scrollHandler = () => {
   if (TableHeadRef.value && TableBodyRef.value) {
+    tableBodyScrollbarWidth.value = TableBodyRef.value.offsetWidth - TableBodyRef.value.clientWidth
+
     TableHeadRef.value.scrollLeft = TableBodyRef.value.scrollLeft
 
     if (TableBodyRef.value.scrollWidth > TableBodyRef.value.clientWidth) {
-      if (TableBodyRef.value.scrollLeft === 0) {
+      if (TableBodyRef.value.scrollLeft <= 0) {
         currentScrollState.value = 'left'
-      } else if (Math.abs(TableBodyRef.value.scrollWidth - TableBodyRef.value.scrollLeft - TableBodyRef.value.clientWidth) < 2) {
+      } else if (TableBodyRef.value.scrollWidth - TableBodyRef.value.scrollLeft - TableBodyRef.value.clientWidth < 2) {
         currentScrollState.value = 'right'
       } else {
         currentScrollState.value = 'middle'
@@ -88,42 +90,55 @@ const scrollHandler = () => {
     } else {
       currentScrollState.value = 'none'
     }
+
   }
 }
 
 useEventListener(TableBodyRef, 'scroll', scrollHandler, { passive: true })
 
-watch(width, () => {
-  scrollHandler()
+const FakeTableHeadRefs = ref<HTMLElement[]>([])
+const calcTableHeadWidths = ref<number[]>([])
+
+watch([width, FakeTableHeadRefs, () => props.data], () => {
+  calcTableHeadWidths.value = FakeTableHeadRefs.value.map((ref) => {
+    return ref.getBoundingClientRect().width
+  })
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      scrollHandler()
+    })
+  })
+}, {
+  immediate: true,
+  flush: 'post'
 })
+
 </script>
 
 <template>
-  <DefineColGroup>
-    <colgroup>
-      <col v-for="column of columns" :key="column.key"
-        :style="{ width: normalizeSize(column.width), minWidth: normalizeSize(column.width) }" />
-    </colgroup>
-  </DefineColGroup>
   <div v-bind="$attrs" class="table-scroll">
     <div class="table-container" :class="[{
       [`table-scroll-left`]: currentScrollState === 'left',
       [`table-scroll-right`]: currentScrollState === 'right',
       [`table-scroll-none`]: currentScrollState === 'none',
     }, tableClass]">
-      <div ref="TableHeadRef" class="table-head">
+      <div ref="TableHeadRef" class="table-head" :style="{
+      marginRight: tableBodyScrollbarWidth + 'px',
+    }">
         <table :style="{
           maxHeight: normalizeSize(scrollHeight),
           maxWidth: normalizeSize(scrollWidth),
         }">
-          <ReuseColGroup />
           <thead>
             <tr class="table-row">
-              <th class="table-row-head" v-for="column of columns" :key="column.key" :class="{
+              <th class="table-row-head" v-for="(column, index) of columns" :key="column.key" :class="{
                 [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
                 [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
                 [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
                 [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
+              }" :style="{
+                width: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
+                minWidth: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
               }">
                 {{ column.label }}
               </th>
@@ -137,8 +152,15 @@ watch(width, () => {
         <table :style="{
           maxWidth: normalizeSize(scrollWidth),
         }">
-          <ReuseColGroup />
+          <colgroup>
+            <col v-for="column of columns" :key="column.key" :style="{ width: normalizeSize(column.width) }" />
+          </colgroup>
           <tbody>
+            <tr class="table-row table-row-fake">
+              <th class="table-row-head" ref="FakeTableHeadRefs" v-for="column of columns" :key="column.key">
+                {{ column.label }}
+              </th>
+            </tr>
             <tr class="table-row" v-for="item of data" :key="item[props.rowKey]">
               <td class="table-row-data" v-for="column of columns" :key="column.key" :class="{
                 [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
@@ -150,7 +172,7 @@ watch(width, () => {
                   <slot :name="`column-${column.key}`" :item="item" :key="column.key" />
                 </template>
                 <template v-else>
-                  <div class="w-0 min-w-full">
+                  <div class="">
                     {{ item[column.key] }}
                   </div>
                 </template>
@@ -178,12 +200,13 @@ watch(width, () => {
 
 .table-head {
   @apply overflow-hidden;
+  table-layout: fixed;
 }
 
 .table-row {
   &-head {
     @apply bg-white text-gray-500;
-    @apply px-2 py-2 px-4 v-middle text-left break-words;
+    @apply px-2 py-2 px-4 v-middle text-left whitespace-nowrap;
     @apply border-b-2 border-gray-200;
   }
 
@@ -207,11 +230,15 @@ table {
 }
 
 .table-cell-fixed-left {
-  @apply sticky left-0;
+  position: sticky;
+  left: 0;
+  z-index: 9;
 }
 
 .table-cell-fixed-right {
-  @apply sticky right-0;
+  position: sticky;
+  right: 0;
+  z-index: 9;
 }
 
 .table-cell-fixed-left-last {
@@ -246,6 +273,17 @@ table {
   .table-cell-fixed-right-first {
     --active-shadow: 0 0 0 0 transparent;
   }
+}
+
+.table-row-fake {
+  visibility: hidden;
+  visibility: collapse;
+  height: 0.01px;
+  line-height: 0;
+  // overflow: hidden;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
 
 .paginator-container {

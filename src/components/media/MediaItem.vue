@@ -182,7 +182,6 @@ function handleLeave() {
               <td>Size</td>
               <td>Original {{ prettyBytes(media.extra.original) }}
                 <br />Thumbnail {{ prettyBytes(media.extra.thumbnail) }}
-                <br />WebP {{ prettyBytes(media.extra.compressed) }}
               </td>
             </tr>
             <tr>

@@ -59,5 +59,11 @@ const showEndMask = computed(() => {
   &.end-mask {
     --show-end-mask: 1;
   }
+
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+
+  scrollbar-width: none;
 }
 </style>
