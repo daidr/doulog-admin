@@ -26,6 +26,13 @@ export default defineConfig({
       dirs: ['./src/stores', './src/composables']
     })
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler'
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
