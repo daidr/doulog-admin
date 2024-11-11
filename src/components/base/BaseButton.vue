@@ -7,6 +7,7 @@ interface BaseButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
   ghost?: boolean;
   color?: string;
   disabled?: boolean;
+  small?: boolean;
 }
 
 defineProps<BaseButtonProps>()
@@ -15,7 +16,8 @@ defineProps<BaseButtonProps>()
 <template>
   <button :class="{
     'ghost': ghost,
-    'normal': !ghost
+    'normal': !ghost,
+    'small': small
   }" :disabled="loading || disabled" :style="{
     '--bg-color': color
   }">
@@ -30,7 +32,7 @@ defineProps<BaseButtonProps>()
 
 <style scoped lang="scss">
 button {
-  @apply py-1.5 px-5 rounded-3 relative;
+  @apply py-1.5 px-3 rounded-0.75em relative w-auto;
   @apply cursor-pointer;
   @apply whitespace-nowrap;
   @apply transition;
@@ -39,7 +41,7 @@ button {
   --bg-color: #303846;
 
   &>.content {
-    @apply flex items-center justify-center relative gap-2;
+    @apply flex items-center justify-center relative gap-0.25em;
   }
 
   &:disabled {
@@ -63,7 +65,7 @@ button {
     @apply text-white;
 
     .bg {
-      @apply opacity-80 bg-[var(--bg-color)] absolute inset-0 rounded-3;
+      @apply opacity-80 bg-[var(--bg-color)] absolute inset-0 rounded-0.75em;
       @apply transition-opacity;
     }
 
@@ -80,8 +82,15 @@ button {
     }
   }
 
-  .icon {
-    @apply text-2xl flex-shrink-0;
+  &.small {
+    @apply text-sm py-0.5 px-1 rounded-0.5em;
+
+    .bg {
+      @apply rounded-0.5em;
+    }
   }
-}
-</style>
+
+  .icon {
+    @apply text-1.2em flex-shrink-0;
+  }
+}</style>
