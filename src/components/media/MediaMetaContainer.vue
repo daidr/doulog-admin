@@ -24,7 +24,7 @@ const handleBlockLeave = () => {
 <style scoped>
 .info-block {
   @apply z-2;
-  @apply py-1 px-1.5 rounded-3;
+  @apply py-1 px-1.5 rounded-3 w-fit;
   @apply text-xs;
   @apply bg-white/70 text-black;
   @apply ring-1 ring-gray/20;

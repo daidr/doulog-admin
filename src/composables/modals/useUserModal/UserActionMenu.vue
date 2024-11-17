@@ -1,9 +1,20 @@
 <script setup lang="ts">
 import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue';
 
-const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage', 'updateMotto']);
+const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage', 'updateMotto', 'checkPasskeys']);
 
 const menu: Menu = [
+  {
+    label: '通行密钥',
+    onClick: () => {
+      emit('checkPasskeys');
+    },
+    icon: 'i-mingcute-key-2-line',
+    type: 'item'
+  },
+  {
+    type: 'separator'
+  },
   {
     label: '修改用户名',
     onClick: () => {

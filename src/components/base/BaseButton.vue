@@ -49,11 +49,11 @@ button {
   }
 
   &.ghost {
-    @apply text-gray-400;
+    @apply text-gray-500;
     @apply ring-1 ring-transparent;
 
     &:not(:disabled):hover {
-      @apply ring-gray-300;
+      @apply ring-gray-400;
     }
 
     &:not(:disabled):active {

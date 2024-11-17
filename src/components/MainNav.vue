@@ -37,7 +37,6 @@ onClickOutside(MainNavWrapperRef, () => {
 onUpdated(() => {
   if (!isNavExpanded.value) return
   if (!MainNavContentRef.value) return
-  console.log('updated')
   maxContentWidth.value = MainNavContentRef.value!.clientWidth + 8
 })
 

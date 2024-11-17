@@ -21,6 +21,22 @@ instance.interceptors.response.use(
       case 0:
         // success
         return resp.data
+      case -2:
+        // invalid parameters
+        error({ content: "参数不合法", duration: 2000 })
+        break
+      case 101003:
+        // email not found
+        error({ content: "邮箱不存在", duration: 2000 })
+        break
+      case 101004:
+        // password incorrect
+        error({ content: "密码错误", duration: 2000 })
+        break
+      case 101005:
+        // Failed to create webauthn challenge
+        error({ content: "创建挑战出现错误", duration: 2000 })
+        break
       default:
         // error
         console.log("Api error: ", resp.data.msg, resp)
@@ -30,6 +46,6 @@ instance.interceptors.response.use(
   (err) => {
     console.log("Unexpected api error: ", err.response, err)
     error({ content: '网络错误', duration: 2000 })
-    return Promise.reject(err)
+    return false
   }
 )

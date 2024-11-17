@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.8.0",
+    "@github/webauthn-json": "^2.1.1",
     "@iconify-json/mingcute": "^1.2.1",
     "@tsconfig/node20": "^20.1.4",
     "@types/jsdom": "^21.1.7",

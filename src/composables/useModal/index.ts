@@ -7,16 +7,18 @@ export interface ModalInfo {
   title?: MaybeRefOrGetter<string | VNode>
   content?: MaybeRefOrGetter<string | VNode>
   icon?: string
+  hideClose?: MaybeRefOrGetter<boolean>
   confirmText?: MaybeRefOrGetter<string>
   cancelText?: MaybeRefOrGetter<string>
-  onConfirm?: () => false | void
-  onCancel?: () => false | void
+  onConfirm?: () => false | void | Promise<false | void>
+  onCancel?: () => false | void | Promise<false | void>
   onClose?: () => void
   hideConfirm?: MaybeRefOrGetter<boolean>
   hideCancel?: MaybeRefOrGetter<boolean>
   loading?: MaybeRefOrGetter<boolean>
   disabledConfirm?: MaybeRefOrGetter<boolean>
   disabledCancel?: MaybeRefOrGetter<boolean>
+  hideCustomTools?: MaybeRefOrGetter<boolean>
   customTools?: MaybeRefOrGetter<string | VNode>
 }
 
@@ -48,15 +50,15 @@ export const ModalContainer = defineComponent(() => {
     const modals = _initModal()
     return h(InnerModalContainer, {
       modals: modals.value,
-      onCancel: (modal) => {
+      onCancel: async (modal) => {
         if (toValue(modal.loading)) return
-        const result = modal.onCancel?.()
+        const result = await modal.onCancel?.()
         if (result === false) return
         closeModal(modal._id)
       },
-      onConfirm: (modal) => {
+      onConfirm: async (modal) => {
         if (toValue(modal.loading)) return
-        const result = modal.onConfirm?.()
+        const result = await modal.onConfirm?.()
         if (result === false) return
         closeModal(modal._id)
       },

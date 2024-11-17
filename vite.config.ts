@@ -43,11 +43,11 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://debug.daidr.dn11:3000',
-        changeOrigin: true,
+        changeOrigin: false,
       },
       '/store': {
         target: 'http://debug.daidr.dn11:3000',
-        changeOrigin: true,
+        changeOrigin: false,
       }
     }
   }
