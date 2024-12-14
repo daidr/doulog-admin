@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { pwLogin } from '@/api/login';
+import { getWebAuthnDiscoverLoginOptions, pwLogin, webauthnLogin } from '@/api/login';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
 import { useRegisterModal } from '../useRegisterModal';
+import { parseRequestOptionsFromJSON } from '@github/webauthn-json/browser-ponyfill';
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
@@ -67,6 +68,47 @@ function runLoginHandler(platform: string, handler: () => void) {
   loginProcessing.value = platform
   handler()
 }
+
+const discoverLoginController = ref<AbortController | null>(null)
+
+onMounted(async () => {
+  if (window.PublicKeyCredential &&
+    PublicKeyCredential.isConditionalMediationAvailable) {
+    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
+    if (isCMA) {
+      discoverLoginHandler()
+    }
+  }
+})
+
+async function discoverLoginHandler() {
+  const resp = await getWebAuthnDiscoverLoginOptions()
+  if (!resp) {
+    return;
+  }
+  discoverLoginController.value = new AbortController()
+  const result = parseRequestOptionsFromJSON({
+    ...resp,
+    signal: discoverLoginController.value.signal,
+    mediation: 'conditional'
+  })
+
+  const credential = await navigator.credentials.get(result);
+  loginProcessing.value = 'passkey'
+  const token = await webauthnLogin(resp.publicKey!.challenge, credential)
+  if (token) {
+    userStore.setToken(token)
+  } else {
+    loginProcessing.value = ''
+    discoverLoginHandler()
+  }
+}
+
+onUnmounted(() => {
+  if (discoverLoginController.value) {
+    discoverLoginController.value.abort()
+  }
+})
 </script>
 
 <template>

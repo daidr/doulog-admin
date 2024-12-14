@@ -1,5 +1,5 @@
 import { instance } from "@/utils/axios";
-import type { CredentialCreationOptionsJSON } from "@github/webauthn-json/browser-ponyfill";
+import type { CredentialCreationOptionsJSON, CredentialRequestOptionsJSON } from "@github/webauthn-json/browser-ponyfill";
 
 export async function pwLogin(email: string, password: string): Promise<string | false> {
   const result = await instance.post<string>('/api/x/auth/login/password', {
@@ -55,4 +55,54 @@ export async function listWebAuthnCredentials(): Promise<WebAuthnCredentialItem[
   }
 
   return result.data;
+}
+
+export async function removeWebAuthnCredential(id: string): Promise<boolean> {
+  const result = await instance.post<boolean>('/api/x/auth/webauthn/credentials/remove', {
+    id
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function renameWebAuthnCredential(id: string, label: string): Promise<boolean> {
+  const result = await instance.post<boolean>('/api/x/auth/webauthn/credentials/rename', {
+    id,
+    label
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function getWebAuthnDiscoverLoginOptions(): Promise<CredentialRequestOptionsJSON | false> {
+  const result = await instance.post<CredentialRequestOptionsJSON>('/api/x/auth/webauthn/login/discover')
+
+  if (!result) {
+    return false;
+  }
+
+  return result.data;
+}
+
+export async function webauthnLogin(challenge: string, data: any): Promise<string | false> {
+  const result = await instance.post<string>('/api/x/auth/webauthn/login/assertion', {
+    challenge,
+    data
+  })
+
+  if (!result) {
+    return false;
+  }
+
+  const token = result.data;
+
+  return token ? token : false;
 }

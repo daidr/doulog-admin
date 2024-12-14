@@ -105,17 +105,18 @@ const LengthCheckComp = defineComponent(() => {
   }
 
   .length-check {
-    @apply text-gray-400 bg-white text-center whitespace-nowrap;
+    @apply text-gray-400 bg-white text-center whitespace-nowrap z-2 relative;
     @apply rounded-xl;
     @apply transform-gpu transition duration-300 -translate-y-1/2;
     transition-property: height, box-shadow, transform;
 
     &.height-level-1 {
+      // 0.5rem padding + 1.5em line-height
       --total-height: calc(1.6em + 0.5rem);
     }
 
     &.height-level-2 {
-      --total-height: calc(1.6em + 0.5rem + 1.6em);
+      --total-height: calc(3.2em + 0.5rem);
     }
 
     :deep(.error) {

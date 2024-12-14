@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import type { WebAuthnCredentialItem } from '@/api/login';
-import BaseButton from '@/components/base/BaseButton.vue';
 import { formatTimeAgo, type UseTimeAgoMessages, type UseTimeAgoUnitNamesDefault } from '@vueuse/core';
+import PasskeyActionMenu from './PasskeyActionMenu.vue';
 
 defineProps<{
   passkey: WebAuthnCredentialItem
 }>();
+
+const emit = defineEmits(['refresh'])
 
 function formatTimeByIntl(time: number) {
   return new Intl.DateTimeFormat('zh-CN', {
@@ -45,7 +47,6 @@ const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
   second: n => `${n}秒`,
   invalid: '',
 }
-
 </script>
 
 <template>
@@ -59,7 +60,7 @@ const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
         <div class="text-10px text-blue-500 rounded-full border-1 border-blue-500 px-1.5" v-if="passkey.synced">Synced
         </div>
       </div>
-      <BaseButton icon="i-mingcute-more-1-fill" ghost small class="text-black" />
+      <PasskeyActionMenu :passkey="passkey" @refresh="emit('refresh')" />
     </div>
 
     <div class="flex justify-between">
@@ -79,7 +80,7 @@ const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
   @apply rounded-lg;
 
   &:hover {
-    @apply bg-gray-200/50;
+    @apply bg-gray-200/50 ring-1 ring-gray-3;
   }
 }
 </style>

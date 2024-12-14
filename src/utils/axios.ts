@@ -37,6 +37,14 @@ instance.interceptors.response.use(
         // Failed to create webauthn challenge
         error({ content: "创建挑战出现错误", duration: 2000 })
         break
+      case 101006:
+        // Failed to finish webauthn verification
+        error({ content: "凭证挑战验证失败", duration: 2000 })
+        break
+      case 101007:
+        // Credential not found
+        error({ content: "凭证不存在", duration: 2000 })
+        break
       default:
         // error
         console.log("Api error: ", resp.data.msg, resp)

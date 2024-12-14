@@ -59,7 +59,7 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="toast-message">
-      <RenderComponent :node="info.content" className="text-base" />
+      <RenderComponent :node="info.content" textClassName="text-base" />
     </div>
     <div v-if="info.duration" class="toast-progress">
       <div :style="{

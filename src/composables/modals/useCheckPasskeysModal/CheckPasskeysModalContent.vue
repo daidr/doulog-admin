@@ -61,8 +61,8 @@ async function handleAddPasskey() {
       <div class="animate-spin i-mingcute-loading-3-line text-3xl mx-auto my-5" v-if="isListLoading"></div>
       <div class="text-xl text-center my-5" v-if="loadedListError">加载失败</div>
       <div v-else-if="!passkeyList || passkeyList.length === 0" class="text-xl text-center my-5">暂无通行密钥</div>
-      <div v-else class="flex flex-col gap-1 overflow-auto">
-        <PasskeyItem v-for="passkey in passkeyList" :key="passkey.id" :passkey="passkey" />
+      <div v-else class="flex flex-col gap-1 overflow-auto p-1px">
+        <PasskeyItem v-for="passkey in passkeyList" :key="passkey.id" :passkey="passkey" @refresh="reloadList" />
       </div>
     </div>
     <div class="flex justify-end">

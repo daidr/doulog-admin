@@ -1,6 +1,6 @@
 import { isVNode, type MaybeRefOrGetter, type VNode } from "vue";
 
-export const RenderComponent = defineComponent((props: { node: MaybeRefOrGetter<string | VNode>, className: string }) => {
+export const RenderComponent = defineComponent((props: { node: MaybeRefOrGetter<string | VNode>, className?: string, textClassName?: string }) => {
   return () => {
     if (isVNode(props.node)) {
       return props.node
@@ -8,13 +8,15 @@ export const RenderComponent = defineComponent((props: { node: MaybeRefOrGetter<
       const result = toValue(props.node);
       if (typeof result === 'string') {
         return h('span', {
-          className: props.className,
+          class: props.textClassName,
         }, result)
       } else {
-        return result
+        return h(result, {
+          class: props.className,
+        })
       }
     }
   }
 }, {
-  props: ['node', 'className']
+  props: ['node', 'className', 'textClassName']
 })

@@ -18,7 +18,7 @@ defineEmits(['cancel', 'confirm'])
       <div v-if="info.title || !toValue(info.hideClose)" class="flex justify-between">
         <div v-if="info.title" class="p-1.5 bg-gray-300 flex self-start items-center gap-1 rounded-full text-gray-800">
           <div v-if="info.icon" class="text-2xl h-6 lh-150%" :class="[toValue(info.icon)]"></div>
-          <RenderComponent :node="info.title" className="font-extrabold h-6 pr-0.5 lh-150%" />
+          <RenderComponent :node="info.title" textClassName="font-extrabold h-6 pr-0.5 lh-150%" />
         </div>
         <div v-if="!toValue(info.hideClose)" class="common-modal-close-btn transition-shadow,colors"
           @click="$emit('cancel')">
@@ -27,12 +27,12 @@ defineEmits(['cancel', 'confirm'])
         <div v-else></div>
       </div>
       <template v-if="info.content">
-        <RenderComponent :node="info.content" className="text-center font-bold text-xl" />
+        <RenderComponent :node="info.content" className="relative z-2" textClassName="text-center font-bold text-xl" />
       </template>
       <div
         v-if="!toValue(info.hideCancel) || !toValue(info.hideConfirm) || (!toValue(info.hideCustomTools) && info.customTools)"
-        class="flex justify-end gap-5 items-center">
-        <RenderComponent v-if="info.customTools" :node="info.customTools" className="" />
+        class="flex justify-end gap-5 items-center z-0 relative">
+        <RenderComponent v-if="info.customTools" :node="info.customTools" />
         <BaseButton v-if="!toValue(info.hideCancel)" @click="$emit('cancel')"
           :disabled="toValue(info.loading) || toValue(info.disabledCancel)" :ghost="true">
           {{ toValue(info.cancelText) || 'Cancel' }}
@@ -55,7 +55,7 @@ defineEmits(['cancel', 'confirm'])
   .common-modal-modal {
     @apply bg-light rounded-6 p-5 text-gray-700;
     @apply ring-1 ring-gray-300;
-    @apply max-h-[calc(100dvh-20px)] min-h-0;
+    @apply max-h-[min(700px\,calc(100dvh-20px))] min-h-0;
     @apply shadow-xl;
     @apply flex flex-col gap-3;
   }
