@@ -49,11 +49,22 @@ button {
   }
 
   &.ghost {
-    @apply text-gray-500;
+    @apply text-gray-500 relative;
     @apply bg-transparent;
+
+    &::before {
+      @apply content-empty bg-current;
+      @apply absolute bottom-0 left-1.5 right-1.5 h-2px;
+      @apply transform-gpu scale-x-1 opacity-0 rounded-xl duration-300;
+      transition-property: opacity, transform;
+    }
 
     &:not(:disabled):hover {
       @apply bg-gray-200;
+
+      &::before {
+        @apply scale-x-100 opacity-50;
+      }
     }
 
     &:not(:disabled):active {
@@ -93,4 +104,5 @@ button {
   .icon {
     @apply text-1.2em flex-shrink-0;
   }
-}</style>
+}
+</style>
