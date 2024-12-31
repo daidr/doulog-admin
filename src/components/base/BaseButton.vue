@@ -37,7 +37,7 @@ button {
   @apply whitespace-nowrap;
   @apply transition;
 
-  transition-property: opacity, box-shadow;
+  transition-property: opacity, background-color;
   --bg-color: #303846;
 
   &>.content {
@@ -50,14 +50,14 @@ button {
 
   &.ghost {
     @apply text-gray-500;
-    @apply ring-1 ring-transparent;
+    @apply bg-transparent;
 
     &:not(:disabled):hover {
-      @apply ring-gray-400;
+      @apply bg-gray-200;
     }
 
     &:not(:disabled):active {
-      @apply text-gray-500;
+      @apply bg-gray-300;
     }
   }
 
