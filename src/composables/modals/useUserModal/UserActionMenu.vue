@@ -1,74 +1,76 @@
 <script setup lang="ts">
-import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue';
+import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue'
 
-const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage', 'updateMotto', 'checkPasskeys']);
+const emit = defineEmits(['logout', 'updateUsername', 'updateEmail', 'updateHomepage', 'updateMotto', 'checkPasskeys'])
 
 const menu: Menu = [
   {
     label: '通行密钥',
     onClick: () => {
-      emit('checkPasskeys');
+      emit('checkPasskeys')
     },
     icon: 'i-mingcute-key-2-line',
-    type: 'item'
+    type: 'item',
   },
   {
-    type: 'separator'
+    type: 'separator',
   },
   {
     label: '修改用户名',
     onClick: () => {
-      emit('updateUsername');
+      emit('updateUsername')
     },
     icon: 'i-mingcute-edit-line',
-    type: 'item'
+    type: 'item',
   },
   {
     label: '修改邮箱',
     onClick: () => {
-      emit('updateEmail');
+      emit('updateEmail')
     },
     icon: 'i-mingcute-mail-send-line',
-    type: 'item'
+    type: 'item',
   },
   {
     label: '修改主页',
     onClick: () => {
-      emit('updateHomepage');
+      emit('updateHomepage')
     },
     icon: 'i-mingcute-link-line',
-    type: 'item'
+    type: 'item',
   },
   {
     label: '修改座右铭',
     onClick: () => {
-      emit('updateMotto');
+      emit('updateMotto')
     },
     icon: 'i-mingcute-textbox-line',
-    type: 'item'
+    type: 'item',
   },
   {
-    type: 'separator'
+    type: 'separator',
   },
   {
     label: '退出登录',
     onClick: () => {
-      emit('logout');
+      emit('logout')
     },
     class: 'text-red-700',
     icon: 'i-mingcute-align-arrow-right-line',
-    type: 'item'
-  }
+    type: 'item',
+  },
 ]
 </script>
 
 <template>
   <BaseMenu :menu="menu" position="right-top">
     <template #default="{ open }">
-      <div class="p-2 rounded-3 cursor-pointer hover:bg-gray-200" :class="{
-    'bg-gray-200': open
-  }">
-        <div class="i-mingcute-more-3-line text-lg"></div>
+      <div
+        class="cursor-pointer rounded-3 p-2 hover:bg-gray-200" :class="{
+          'bg-gray-200': open,
+        }"
+      >
+        <div class="i-mingcute-more-3-line text-lg" />
       </div>
     </template>
   </BaseMenu>

@@ -2,13 +2,17 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">tags</div>
+  <div class="h-screen flex items-center justify-center">
+    tags
+  </div>
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "标签"
   }
-}</route>
+}
+</route>

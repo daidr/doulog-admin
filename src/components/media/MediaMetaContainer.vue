@@ -3,21 +3,23 @@ const currentRef = defineModel<HTMLElement | null>()
 
 const WrapperRef = ref<HTMLElement | null>(null)
 
-const handleBlockEnter = () => {
+function handleBlockEnter() {
   currentRef.value = WrapperRef.value
 }
 
-const handleBlockLeave = () => {
+function handleBlockLeave() {
   if (currentRef.value !== WrapperRef.value) return
   currentRef.value = null
 }
 </script>
 
 <template>
-  <div ref="WrapperRef" class="info-block" @mouseenter="handleBlockEnter" @mouseleave="handleBlockLeave" :class="{
-    'important-opacity-0': currentRef && currentRef !== WrapperRef
-  }">
-    <slot :mouse-over="currentRef && currentRef !== WrapperRef"></slot>
+  <div
+    ref="WrapperRef" class="info-block" :class="{
+      'important-opacity-0': currentRef && currentRef !== WrapperRef,
+    }" @mouseenter="handleBlockEnter" @mouseleave="handleBlockLeave"
+  >
+    <slot :mouse-over="currentRef && currentRef !== WrapperRef" />
   </div>
 </template>
 

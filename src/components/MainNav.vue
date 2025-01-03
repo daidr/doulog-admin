@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { breakpointsTailwind } from '@vueuse/core';
-import LinkItem from './MainNav/LinkItem.vue';
-import NavLinks from './MainNav/NavLinks.vue';
-import UserItem from './MainNav/UserItem.vue';
+import { breakpointsTailwind } from '@vueuse/core'
+import LinkItem from './MainNav/LinkItem.vue'
+import NavLinks from './MainNav/NavLinks.vue'
+import UserItem from './MainNav/UserItem.vue'
 
 const MainNavWrapperRef = ref<HTMLElement | null>(null)
 const MainNavRef = ref<HTMLElement | null>(null)
@@ -44,25 +44,33 @@ const route = useRoute()
 </script>
 
 <template>
-  <div class="relative h-[calc(100%-0.5rem)] transition-margin duration-300" :style="{
-    '--content-width': isNavExpanded ? maxContentWidth + 'px' : undefined,
-    'margin-left': smAndSmaller && !showOnMobile ? `-${maxContentWidth + 4}px` : undefined,
-  }" ref="MainNavWrapperRef">
+  <div
+    ref="MainNavWrapperRef" class="relative h-[calc(100%-0.5rem)] transition-margin duration-300" :style="{
+      '--content-width': isNavExpanded ? `${maxContentWidth}px` : undefined,
+      'margin-left': smAndSmaller && !showOnMobile ? `-${maxContentWidth + 4}px` : undefined,
+    }"
+  >
     <div v-if="smAndSmaller" class="mobile-button" @click.prevent="showOnMobile = !showOnMobile">
-      <div v-if="showOnMobile" class="i-mingcute-arrows-left-line"></div>
-      <div v-else class="i-mingcute-arrows-right-line"></div>
+      <div v-if="showOnMobile" class="i-mingcute-arrows-left-line" />
+      <div v-else class="i-mingcute-arrows-right-line" />
     </div>
-    <nav class="main-nav" ref="MainNavRef" :class="{
-      'expanded': isNavExpanded,
-      'shadow-xl': showOnMobile || (!smAndSmaller && isNavExpanded),
-    }">
-      <div class="w-max h-full flex flex-col justify-between" ref="MainNavContentRef">
-        <div class="max-h-[calc(100%-60px)] flex-grow flex flex-col">
+    <nav
+      ref="MainNavRef" class="main-nav" :class="{
+        'expanded': isNavExpanded,
+        'shadow-xl': showOnMobile || (!smAndSmaller && isNavExpanded),
+      }"
+    >
+      <div ref="MainNavContentRef" class="h-full w-max flex flex-col justify-between">
+        <div class="max-h-[calc(100%-60px)] flex flex-grow flex-col">
           <LinkItem to="/">
-            <img src="@/assets/images/logo-head.png" class="w-11 h-11" />
+            <img src="@/assets/images/logo-head.png" class="h-11 w-11">
             <template #extra>
-              <p class="text-base font-bold">DouLog 管理面板</p>
-              <p class="text-xs">{{ route.meta.title }}</p>
+              <p class="text-base font-bold">
+                DouLog 管理面板
+              </p>
+              <p class="text-xs">
+                {{ route.meta.title }}
+              </p>
             </template>
           </LinkItem>
           <NavLinks />

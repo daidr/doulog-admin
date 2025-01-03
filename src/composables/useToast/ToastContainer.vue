@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { ToastInfo } from './'
-import Toast from './Toast.vue';
+import Toast from './Toast.vue'
 
 defineProps<{
   toasts: ToastInfo[]
@@ -10,7 +10,7 @@ const emit = defineEmits<{
   close: [toast: ToastInfo]
 }>()
 
-const handleClose = (toast: ToastInfo) => {
+function handleClose(toast: ToastInfo) {
   emit('close', toast)
 }
 </script>
@@ -28,8 +28,6 @@ const handleClose = (toast: ToastInfo) => {
   @apply fixed top-10 left-1/2 transform-gpu -translate-x-1/2 z-110;
   @apply flex flex-col items-center gap-1;
 }
-
-
 
 @media (prefers-reduced-motion: no-preference) {
   .toast-move,

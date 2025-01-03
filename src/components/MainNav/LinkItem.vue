@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import type { RouterLinkProps } from 'vue-router/auto';
+import type { RouterLinkProps } from 'vue-router/auto'
 
 defineProps<{
-  to: typeof RouterLinkProps['to']
+  to: RouterLinkProps['to']
   activeHighlight?: boolean
 }>()
 </script>
 
 <template>
-  <RouterLink class="link-item" :class="{
-      'active-highlight': activeHighlight
-    }" :to="to">
+  <RouterLink
+    class="link-item" :class="{
+      'active-highlight': activeHighlight,
+    }" :to="to"
+  >
     <div class="flex items-center">
       <div class="item-size flex items-center justify-center">
         <slot />

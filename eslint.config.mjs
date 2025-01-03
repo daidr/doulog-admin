@@ -30,6 +30,11 @@ export default antfu(
       // 允许 while 条件内赋值操作
       'no-cond-assign': ['error', 'except-parens'],
 
+      // 允许未使用的变量
+      'no-unused-vars': 'warn',
+      'vue/no-unused-vars': 'warn',
+      'unused-imports/no-unused-vars': 'warn',
+
       'style/brace-style': ['error', '1tbs'],
     },
   },

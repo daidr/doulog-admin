@@ -1,9 +1,9 @@
 <script setup lang="ts">
 export interface BaseBadgeProps {
-  type?: 'primary' | 'success' | 'warning' | 'danger' | 'info';
-  size?: 'small' | 'medium' | 'large';
-  class?: any;
-  icon?: string;
+  type?: 'primary' | 'success' | 'warning' | 'danger' | 'info'
+  size?: 'small' | 'medium' | 'large'
+  class?: any
+  icon?: string
 }
 
 withDefaults(defineProps<BaseBadgeProps>(), {
@@ -14,8 +14,8 @@ withDefaults(defineProps<BaseBadgeProps>(), {
 
 <template>
   <div class="base-badge" :class="[$props.class, [`size-${size}`, `type-${type}`]]">
-    <div v-if="icon" :class="icon" class="base-badge-icon"></div>
-    <slot></slot>
+    <div v-if="icon" :class="icon" class="base-badge-icon" />
+    <slot />
   </div>
 </template>
 

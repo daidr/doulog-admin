@@ -1,43 +1,43 @@
 <script setup lang="ts" generic="T extends { [key: string]: any }">
-import BasePaginator, { type PaginatorEmits, type PaginatorProps } from './BasePaginator.vue';
+import BasePaginator, { type PaginatorEmits, type PaginatorProps } from './BasePaginator.vue'
 
 export interface TableSchemeItem {
-  label: string;
-  key: string;
-  fixed?: boolean;
-  width?: number | string;
-  align?: 'left' | 'center' | 'right';
+  label: string
+  key: string
+  fixed?: boolean
+  width?: number | string
+  align?: 'left' | 'center' | 'right'
 }
 
-export type TableScheme = TableSchemeItem[];
+export type TableScheme = TableSchemeItem[]
 
 const props = defineProps<{
-  columns: TableScheme;
-  rowKey: keyof T;
-  data: T[];
-  loading?: boolean;
-  scrollHeight?: number | string;
-  scrollWidth?: number | string;
-  tableClass?: any;
-  paginatorClass?: any;
-  paginator?: PaginatorProps;
-}>();
-
-const normalizeSize = (size: number | string | undefined) => {
-  if (typeof size === 'number') {
-    return `${size}px`;
-  }
-  return size;
-};
-
-defineSlots<{
-  [x: `column-${string}`]: (props: { item: T, key: string }) => any;
+  columns: TableScheme
+  rowKey: keyof T
+  data: T[]
+  loading?: boolean
+  scrollHeight?: number | string
+  scrollWidth?: number | string
+  tableClass?: any
+  paginatorClass?: any
+  paginator?: PaginatorProps
 }>()
 
 defineEmits<PaginatorEmits>()
 
+defineSlots<{
+  [x: `column-${string}`]: (props: { item: T, key: string }) => any
+}>()
+
+function normalizeSize(size: number | string | undefined) {
+  if (typeof size === 'number') {
+    return `${size}px`
+  }
+  return size
+}
+
 const leftFixedColumns = computed(() => {
-  let left: string[] = []
+  const left: string[] = []
   for (let i = 0; i < props.columns.length; i++) {
     const column = props.columns[i]
     if (column.fixed) {
@@ -51,7 +51,7 @@ const leftFixedColumns = computed(() => {
 })
 
 const rightFixedColumns = computed(() => {
-  let right: string[] = []
+  const right: string[] = []
 
   for (let i = props.columns.length - 1; i >= 0; i--) {
     const column = props.columns[i]
@@ -73,7 +73,7 @@ const { width } = useElementBounding(TableBodyRef)
 
 const tableBodyScrollbarWidth = ref<number>(0)
 
-const scrollHandler = () => {
+function scrollHandler() {
   if (TableHeadRef.value && TableBodyRef.value) {
     tableBodyScrollbarWidth.value = TableBodyRef.value.offsetWidth - TableBodyRef.value.clientWidth
 
@@ -90,7 +90,6 @@ const scrollHandler = () => {
     } else {
       currentScrollState.value = 'none'
     }
-
   }
 }
 
@@ -110,66 +109,79 @@ watch([width, FakeTableHeadRefs, () => props.data], () => {
   })
 }, {
   immediate: true,
-  flush: 'post'
+  flush: 'post',
 })
-
 </script>
 
 <template>
   <div v-bind="$attrs" class="table-scroll">
-    <div class="table-container" :class="[{
-      [`table-scroll-left`]: currentScrollState === 'left',
-      [`table-scroll-right`]: currentScrollState === 'right',
-      [`table-scroll-none`]: currentScrollState === 'none',
-    }, tableClass]">
-      <div ref="TableHeadRef" class="table-head" :style="{
-      marginRight: tableBodyScrollbarWidth + 'px',
-    }">
-        <table :style="{
-          maxHeight: normalizeSize(scrollHeight),
-          maxWidth: normalizeSize(scrollWidth),
-        }">
+    <div
+      class="table-container" :class="[{
+        [`table-scroll-left`]: currentScrollState === 'left',
+        [`table-scroll-right`]: currentScrollState === 'right',
+        [`table-scroll-none`]: currentScrollState === 'none',
+      }, tableClass]"
+    >
+      <div
+        ref="TableHeadRef" class="table-head" :style="{
+          marginRight: `${tableBodyScrollbarWidth}px`,
+        }"
+      >
+        <table
+          :style="{
+            maxHeight: normalizeSize(scrollHeight),
+            maxWidth: normalizeSize(scrollWidth),
+          }"
+        >
           <thead>
             <tr class="table-row">
-              <th class="table-row-head" v-for="(column, index) of columns" :key="column.key" :class="{
-                [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
-                [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
-                [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
-                [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
-              }" :style="{
-                width: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
-                minWidth: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
-              }">
+              <th
+                v-for="(column, index) of columns" :key="column.key" class="table-row-head" :class="{
+                  [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
+                  [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
+                  [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
+                  [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
+                }" :style="{
+                  width: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
+                  minWidth: calcTableHeadWidths[index] ? normalizeSize(calcTableHeadWidths[index]) : 'auto',
+                }"
+              >
                 {{ column.label }}
               </th>
             </tr>
           </thead>
         </table>
       </div>
-      <div ref="TableBodyRef" class="table-body overflow-auto" :style="{
-        maxHeight: normalizeSize(scrollHeight),
-      }">
-        <table :style="{
-          maxWidth: normalizeSize(scrollWidth),
-        }">
+      <div
+        ref="TableBodyRef" class="table-body overflow-auto" :style="{
+          maxHeight: normalizeSize(scrollHeight),
+        }"
+      >
+        <table
+          :style="{
+            maxWidth: normalizeSize(scrollWidth),
+          }"
+        >
           <colgroup>
-            <col v-for="column of columns" :key="column.key" :style="{ width: normalizeSize(column.width) }" />
+            <col v-for="column of columns" :key="column.key" :style="{ width: normalizeSize(column.width) }">
           </colgroup>
           <tbody>
-            <tr class="table-row table-row-fake">
-              <th class="table-row-head" ref="FakeTableHeadRefs" v-for="column of columns" :key="column.key">
+            <tr class="table-row-fake table-row">
+              <th v-for="column of columns" ref="FakeTableHeadRefs" :key="column.key" class="table-row-head">
                 {{ column.label }}
               </th>
             </tr>
-            <tr class="table-row" v-for="item of data" :key="item[props.rowKey]">
-              <td class="table-row-data" v-for="column of columns" :key="column.key" :class="{
-                [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
-                [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
-                [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
-                [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
-              }">
+            <tr v-for="item of data" :key="item[props.rowKey]" class="table-row">
+              <td
+                v-for="column of columns" :key="column.key" class="table-row-data" :class="{
+                  [`table-cell-fixed-left`]: leftFixedColumns.includes(column.key),
+                  [`table-cell-fixed-right`]: rightFixedColumns.includes(column.key),
+                  [`table-cell-fixed-left-last`]: leftFixedColumns[leftFixedColumns.length - 1] === column.key,
+                  [`table-cell-fixed-right-first`]: rightFixedColumns[0] === column.key,
+                }"
+              >
                 <template v-if="$slots[`column-${column.key}`]">
-                  <slot :name="`column-${column.key}`" :item="item" :key="column.key" />
+                  <slot :key="column.key" :name="`column-${column.key}`" :item="item" />
                 </template>
                 <template v-else>
                   <div class="">
@@ -185,10 +197,12 @@ watch([width, FakeTableHeadRefs, () => props.data], () => {
     <div v-if="paginator" class="paginator-container" :class="[paginatorClass]">
       <div class="paginator-tips">
         显示第 {{ (paginator.current - 1) * paginator.size + 1 }} 到 {{ Math.min(paginator.current * paginator.size,
-          paginator.total) }} 条，共 {{ paginator.total }} 条
+                                                                             paginator.total) }} 条，共 {{ paginator.total }} 条
       </div>
-      <BasePaginator v-bind="paginator" @page-change="$emit('page-change', $event)"
-        @size-change="$emit('size-change', $event)" />
+      <BasePaginator
+        v-bind="paginator" @page-change="$emit('pageChange', $event)"
+        @size-change="$emit('sizeChange', $event)"
+      />
     </div>
   </div>
 </template>

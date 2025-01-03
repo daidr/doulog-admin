@@ -1,20 +1,20 @@
-import { removeWebAuthnCredential, type WebAuthnCredentialItem } from "@/api/login";
-import { useToast } from "@/composables/useToast";
+import { removeWebAuthnCredential, type WebAuthnCredentialItem } from '@/api/login'
+import { useToast } from '@/composables/useToast'
 
-export const usePasskeyRemoveModal = (passkey: WebAuthnCredentialItem, successCb?: () => void | Promise<void>) => {
+export function usePasskeyRemoveModal(passkey: WebAuthnCredentialItem, successCb?: () => void | Promise<void>) {
   const loading = ref(false)
   const { success } = useToast()
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (closeModal: () => void) => {
     loading.value = true
     try {
       if (await removeWebAuthnCredential(passkey.id)) {
-        await successCb?.();
+        await successCb?.()
         success({
           content: '成功移除通行密钥',
-          duration: 2000
+          duration: 2000,
         })
-        modal.close()
+        closeModal()
       }
     } finally {
       loading.value = false
@@ -29,10 +29,10 @@ export const usePasskeyRemoveModal = (passkey: WebAuthnCredentialItem, successCb
     loading,
     confirmText: computed(() => '确定'),
     onConfirm() {
-      handleConfirm()
-      return false;
-    }
+      handleConfirm(modal.close)
+      return false
+    },
   })
 
-  return modal;
+  return modal
 }

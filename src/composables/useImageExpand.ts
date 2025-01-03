@@ -25,6 +25,6 @@ export default function useImageExpand(delay: number = 500) {
     zIndex,
     expanded,
     show,
-    hide
+    hide,
   }
 }

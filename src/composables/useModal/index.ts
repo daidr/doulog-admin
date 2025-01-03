@@ -65,7 +65,7 @@ export const ModalContainer = defineComponent(() => {
       onClose: (modal) => {
         if (toValue(modal.loading)) return
         closeModal(modal._id)
-      }
+      },
     })
   }
 })

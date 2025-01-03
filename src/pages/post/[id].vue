@@ -2,14 +2,15 @@
 </script>
 
 <template>
-    <div class="flex items-center justify-center">
-    </div>
+  <div class="flex items-center justify-center" />
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "编辑文章"
   }
-}</route>
+}
+</route>

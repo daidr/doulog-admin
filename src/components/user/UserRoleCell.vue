@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { UserInfo } from '@/api/user';
-import BaseBadge, { type BaseBadgeProps } from '../base/BaseBadge.vue';
+import type { UserInfo } from '@/api/user'
+import BaseBadge, { type BaseBadgeProps } from '../base/BaseBadge.vue'
 
 withDefaults(defineProps<{
   user: UserInfo
   size?: BaseBadgeProps['size']
 }>(), {
-  size: 'medium'
+  size: 'medium',
 })
 
 function getBadgeType(user: UserInfo) {

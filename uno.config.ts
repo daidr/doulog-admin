@@ -1,5 +1,4 @@
-import { defineConfig } from 'unocss'
-import { transformerDirectives, transformerVariantGroup, presetIcons, presetUno } from 'unocss'
+import { defineConfig, presetIcons, presetUno, transformerDirectives, transformerVariantGroup } from 'unocss'
 
 export default defineConfig({
   presets: [
@@ -16,7 +15,7 @@ export default defineConfig({
         /\.(vue|svelte|[jt]sx|mdx?|astro|elm|php|phtml|html)($|\?)/,
         'src/constants/**/*.{js,ts}',
         'src/composables/modals/**/*.{js,ts}',
-      ]
-    }
-  }
+      ],
+    },
+  },
 })

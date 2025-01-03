@@ -3,13 +3,17 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">dashboard</div>
+  <div class="h-screen flex items-center justify-center">
+    dashboard
+  </div>
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "仪表盘"
   }
-}</route>
+}
+</route>

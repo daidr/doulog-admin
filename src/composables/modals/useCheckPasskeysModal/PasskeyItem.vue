@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { WebAuthnCredentialItem } from '@/api/login';
-import { formatTimeAgo, type UseTimeAgoMessages, type UseTimeAgoUnitNamesDefault } from '@vueuse/core';
-import PasskeyActionMenu from './PasskeyActionMenu.vue';
+import type { WebAuthnCredentialItem } from '@/api/login'
+import { formatTimeAgo, type UseTimeAgoMessages, type UseTimeAgoUnitNamesDefault } from '@vueuse/core'
+import PasskeyActionMenu from './PasskeyActionMenu.vue'
 
 defineProps<{
   passkey: WebAuthnCredentialItem
-}>();
+}>()
 
 const emit = defineEmits(['refresh'])
 
@@ -15,7 +15,7 @@ function formatTimeByIntl(time: number) {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-  }).format(time * 1000);
+  }).format(time * 1000)
 }
 
 const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
@@ -52,12 +52,13 @@ const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
 <template>
   <div class="passkey-item">
     <div class="flex justify-between">
-      <div class="flex gap-1 items-center">
-        <div class="text-base font-bold flex gap-1 items-center">
-          <div class="i-mingcute-user-security-fill text-lg"></div>
+      <div class="flex items-center gap-1">
+        <div class="flex items-center gap-1 text-base font-bold">
+          <div class="i-mingcute-user-security-fill text-lg" />
           {{ passkey.label }}
         </div>
-        <div class="text-10px text-blue-500 rounded-full border-1 border-blue-500 px-1.5" v-if="passkey.synced">Synced
+        <div v-if="passkey.synced" class="border-1 border-blue-500 rounded-full px-1.5 text-10px text-blue-500">
+          Synced
         </div>
       </div>
       <PasskeyActionMenu :passkey="passkey" @refresh="emit('refresh')" />
@@ -65,12 +66,11 @@ const DEFAULT_MESSAGES: UseTimeAgoMessages<UseTimeAgoUnitNamesDefault> = {
 
     <div class="flex justify-between">
       <span class="text-xs text-gray-500">创建于 {{ formatTimeByIntl(passkey.createdAt) }}</span>
-      <span class="text-xs text-gray-500" v-if="passkey.lastUsedAt !== -1">使用于{{ formatTimeAgo(new
+      <span v-if="passkey.lastUsedAt !== -1" class="text-xs text-gray-500">使用于{{ formatTimeAgo(new
         Date(passkey.lastUsedAt * 1000), { messages: DEFAULT_MESSAGES }) }}</span>
-      <span class="text-xs text-gray-500" v-else>未使用</span>
+      <span v-else class="text-xs text-gray-500">未使用</span>
     </div>
   </div>
-
 </template>
 
 <style scoped>

@@ -2,13 +2,17 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">posts</div>
+  <div class="h-screen flex items-center justify-center">
+    posts
+  </div>
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "文章"
   }
-}</route>
+}
+</route>

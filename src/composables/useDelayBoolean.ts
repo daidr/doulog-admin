@@ -1,15 +1,15 @@
-import type { MaybeRefOrGetter } from "vue";
+import type { MaybeRefOrGetter } from 'vue'
 
-export const useDelayRef = (value: MaybeRefOrGetter<boolean>, delay: number, init: boolean) => {
-  let timer: number;
-  let lastValue = ref(init);
+export function useDelayRef(value: MaybeRefOrGetter<boolean>, delay: number, init: boolean) {
+  let timer: number
+  const lastValue = ref(init)
 
   watch(computed(() => toValue(value)), (val) => {
-    clearTimeout(timer);
+    clearTimeout(timer)
     timer = setTimeout(() => {
-      lastValue.value = val;
-    }, delay);
-  }, { immediate: true });
+      lastValue.value = val
+    }, delay)
+  }, { immediate: true })
 
-  return lastValue;
+  return lastValue
 }

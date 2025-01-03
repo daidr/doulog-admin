@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { getWebAuthnDiscoverLoginOptions, pwLogin, webauthnLogin } from '@/api/login';
-import BaseButton from '@/components/base/BaseButton.vue';
-import BaseInput from '@/components/base/BaseInput.vue';
-import { useRegisterModal } from '../useRegisterModal';
-import { parseRequestOptionsFromJSON } from '@github/webauthn-json/browser-ponyfill';
+import { getWebAuthnDiscoverLoginOptions, pwLogin, webauthnLogin } from '@/api/login'
+import BaseButton from '@/components/base/BaseButton.vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import { parseRequestOptionsFromJSON } from '@github/webauthn-json/browser-ponyfill'
+import { useRegisterModal } from '../useRegisterModal'
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
@@ -15,10 +15,10 @@ watch(() => userInfo.value.isLogged, () => {
   }
 })
 
-const handlePasskeyLogin = () => {
+function handlePasskeyLogin() {
 }
 
-const handleGitHubLogin = () => {
+function handleGitHubLogin() {
   // // /login
   // const frontendCallback = new URL('/login', window.location.origin).href
   // const backendUrl = new URL('/api/auth/login/go', API_BASE)
@@ -27,15 +27,14 @@ const handleGitHubLogin = () => {
   // window.open(backendUrl, "_blank", "popup, width=600, height=600, location=no")
 }
 
-const handleGoogleLogin = () => {
+function handleGoogleLogin() {
 }
 
-const handleQQLogin = () => {
+function handleQQLogin() {
 }
 
-const handleTestLogin = () => {
+function handleTestLogin() {
 }
-
 
 const formEmail = ref('')
 const formPassword = ref('')
@@ -43,9 +42,9 @@ function isEmptyString(str: string) {
   return str.trim() === ''
 }
 function isInvalidEmail(email: string) {
-  return !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)
+  return !/^[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)
 }
-const disabledPwButton = computed(() => loginProcessing.value !== '' && loginProcessing.value !== 'password' || isEmptyString(formEmail.value) || isEmptyString(formPassword.value) || isInvalidEmail(formEmail.value))
+const disabledPwButton = computed(() => (loginProcessing.value !== '' && loginProcessing.value !== 'password') || isEmptyString(formEmail.value) || isEmptyString(formPassword.value) || isInvalidEmail(formEmail.value))
 
 async function loginWithPassword() {
   loginProcessing.value = 'password'
@@ -72,9 +71,9 @@ function runLoginHandler(platform: string, handler: () => void) {
 const discoverLoginController = ref<AbortController | null>(null)
 
 onMounted(async () => {
-  if (window.PublicKeyCredential &&
-    PublicKeyCredential.isConditionalMediationAvailable) {
-    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable();
+  if (window.PublicKeyCredential
+    && PublicKeyCredential.isConditionalMediationAvailable) {
+    const isCMA = await PublicKeyCredential.isConditionalMediationAvailable()
     if (isCMA) {
       discoverLoginHandler()
     }
@@ -84,16 +83,16 @@ onMounted(async () => {
 async function discoverLoginHandler() {
   const resp = await getWebAuthnDiscoverLoginOptions()
   if (!resp) {
-    return;
+    return
   }
   discoverLoginController.value = new AbortController()
   const result = parseRequestOptionsFromJSON({
     ...resp,
     signal: discoverLoginController.value.signal,
-    mediation: 'conditional'
+    mediation: 'conditional',
   })
 
-  const credential = await navigator.credentials.get(result);
+  const credential = await navigator.credentials.get(result)
   loginProcessing.value = 'passkey'
   const token = await webauthnLogin(resp.publicKey!.challenge, credential)
   if (token) {
@@ -113,36 +112,48 @@ onUnmounted(() => {
 
 <template>
   <DefinePlatformButtonTemplate v-slot="{ platform, clickHandler, icon, $slots }">
-    <BaseButton @click="runLoginHandler(platform, clickHandler)" :loading="loginProcessing === platform" :ghost="true"
-      :small="true" :disabled="loginProcessing !== '' && loginProcessing !== platform" :icon="icon">
+    <BaseButton
+      :loading="loginProcessing === platform" :ghost="true" :small="true"
+      :disabled="loginProcessing !== '' && loginProcessing !== platform" :icon="icon" @click="runLoginHandler(platform, clickHandler)"
+    >
       <component :is="$slots.default" />
     </BaseButton>
   </DefinePlatformButtonTemplate>
-  <div class="gap-2 flex flex-col">
-    <BaseInput v-model="formEmail" type="email" placeholder="邮箱" autocomplete="username webauthn"
-      :disabled="loginProcessing !== ''" />
-    <BaseInput v-model="formPassword" type="password" placeholder="密码" autocomplete="current-password"
-      :disabled="loginProcessing !== ''" />
-    <BaseButton @click="loginWithPassword" :loading="loginProcessing === 'password'"
-      :disabled="disabledPwButton">登录</BaseButton>
+  <div class="flex flex-col gap-2">
+    <BaseInput
+      v-model="formEmail" type="email" placeholder="邮箱" autocomplete="username webauthn"
+      :disabled="loginProcessing !== ''"
+    />
+    <BaseInput
+      v-model="formPassword" type="password" placeholder="密码" autocomplete="current-password"
+      :disabled="loginProcessing !== ''"
+    />
+    <BaseButton
+      :loading="loginProcessing === 'password'" :disabled="disabledPwButton"
+      @click="loginWithPassword"
+    >
+      登录
+    </BaseButton>
     <div class="flex justify-between">
-      <ReusePlatformButton platform="passkey" :clickHandler="handlePasskeyLogin" icon="i-mingcute-key-2-fill">
+      <ReusePlatformButton platform="passkey" :click-handler="handlePasskeyLogin" icon="i-mingcute-key-2-fill">
         使用 passkey 登录
       </ReusePlatformButton>
-      <BaseButton :ghost="true" :small="true" @click="useRegisterModal">创建账号</BaseButton>
+      <BaseButton :ghost="true" :small="true" @click="useRegisterModal">
+        创建账号
+      </BaseButton>
     </div>
-    <hr />
+    <hr>
     <div class="flex flex-wrap justify-center gap-1">
-      <ReusePlatformButton platform="github" :clickHandler="handleGitHubLogin" icon="i-mingcute-github-fill">
+      <ReusePlatformButton platform="github" :click-handler="handleGitHubLogin" icon="i-mingcute-github-fill">
         GitHub
       </ReusePlatformButton>
-      <ReusePlatformButton platform="google" :clickHandler="handleGoogleLogin" icon="i-mingcute-google-fill">
+      <ReusePlatformButton platform="google" :click-handler="handleGoogleLogin" icon="i-mingcute-google-fill">
         Google
       </ReusePlatformButton>
-      <ReusePlatformButton platform="qq" :clickHandler="handleQQLogin" icon="i-mingcute-qq-fill">
+      <ReusePlatformButton platform="qq" :click-handler="handleQQLogin" icon="i-mingcute-qq-fill">
         QQ
       </ReusePlatformButton>
-      <ReusePlatformButton platform="test" :clickHandler="handleTestLogin" icon="i-mingcute-idcard-fill">
+      <ReusePlatformButton platform="test" :click-handler="handleTestLogin" icon="i-mingcute-idcard-fill">
         12啊啊aas
       </ReusePlatformButton>
     </div>

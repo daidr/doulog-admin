@@ -1,4 +1,4 @@
-import type { MaybeRefOrGetter, VNode } from "vue"
+import type { MaybeRefOrGetter, VNode } from 'vue'
 import InnerToastContainer from './ToastContainer.vue'
 
 export interface ToastInfo {
@@ -35,7 +35,6 @@ function closeToast(_id: string) {
   toasts.value = toasts.value.filter(t => t._id !== _id)
 }
 
-
 export const ToastContainer = defineComponent(() => {
   return () => {
     const toasts = _initToasts()
@@ -43,7 +42,7 @@ export const ToastContainer = defineComponent(() => {
       toasts: toasts.value,
       onClose: (toast) => {
         closeToast(toast._id)
-      }
+      },
     })
   }
 })

@@ -3,13 +3,17 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">projects/manage</div>
+  <div class="h-screen flex items-center justify-center">
+    projects/manage
+  </div>
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "项目管理"
   }
-}</route>
+}
+</route>

@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import type { ButtonHTMLAttributes } from 'vue';
+import type { ButtonHTMLAttributes } from 'vue'
 
 interface BaseButtonProps extends /* @vue-ignore */ ButtonHTMLAttributes {
-  icon?: string;
-  loading?: boolean;
-  ghost?: boolean;
-  color?: string;
-  disabled?: boolean;
-  small?: boolean;
+  icon?: string
+  loading?: boolean
+  ghost?: boolean
+  color?: string
+  disabled?: boolean
+  small?: boolean
 }
 
 defineProps<BaseButtonProps>()
 </script>
 
 <template>
-  <button :class="{
-    'ghost': ghost,
-    'normal': !ghost,
-    'small': small
-  }" :disabled="loading || disabled" :style="{
-    '--bg-color': color
-  }">
-    <div class="bg"></div>
+  <button
+    :class="{
+      ghost,
+      normal: !ghost,
+      small,
+    }" :disabled="loading || disabled" :style="{
+      '--bg-color': color,
+    }"
+  >
+    <div class="bg" />
     <div class="content">
-      <div v-if="loading" class="icon animate-spin i-mingcute-loading-3-line"></div>
-      <div v-else-if="icon" class="icon" :class="[icon]"></div>
+      <div v-if="loading" class="icon i-mingcute-loading-3-line animate-spin" />
+      <div v-else-if="icon" class="icon" :class="[icon]" />
       <slot />
     </div>
   </button>

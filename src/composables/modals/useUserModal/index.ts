@@ -1,12 +1,12 @@
-import UserActionMenu from "./UserActionMenu.vue"
-import UserModalContent from "./UserModalContent.vue"
-import { useChangeNameModal } from '../useChangeNameModal';
-import { useChangeEmailModal } from "../useChangeEmailModal";
-import { useChangeHomepageModal } from "../useChangeHomepageModal";
-import { useChangeMottoModal } from "../useChangeMottoModal";
-import { useCheckPasskeysModal } from "../useCheckPasskeysModal";
+import { useChangeEmailModal } from '../useChangeEmailModal'
+import { useChangeHomepageModal } from '../useChangeHomepageModal'
+import { useChangeMottoModal } from '../useChangeMottoModal'
+import { useChangeNameModal } from '../useChangeNameModal'
+import { useCheckPasskeysModal } from '../useCheckPasskeysModal'
+import UserActionMenu from './UserActionMenu.vue'
+import UserModalContent from './UserModalContent.vue'
 
-export const useUserModal = () => {
+export function useUserModal() {
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
   const { setToken, fetchUserInfo } = userStore
@@ -60,8 +60,8 @@ export const useUserModal = () => {
           if (userInfo.value.isLogged) {
             useCheckPasskeysModal(userInfo.value)
           }
-        }
+        },
       })
-    }
+    },
   })
 }

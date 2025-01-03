@@ -1,44 +1,50 @@
 <script setup lang="ts">
-import { toValue } from 'vue';
 import type { ModalInfo } from '.'
-import BaseButton from '@/components/base/BaseButton.vue';
-import { RenderComponent } from '@/utils/comp';
+import BaseButton from '@/components/base/BaseButton.vue'
+import { RenderComponent } from '@/utils/comp'
+import { toValue } from 'vue'
 
 defineProps<{
   info: ModalInfo
 }>()
 
 defineEmits(['cancel', 'confirm'])
-
 </script>
 
 <template>
   <div class="common-modal">
     <div class="common-modal-modal">
       <div v-if="info.title || !toValue(info.hideClose)" class="flex justify-between">
-        <div v-if="info.title" class="p-1.5 bg-gray-300 flex self-start items-center gap-1 rounded-full text-gray-800">
-          <div v-if="info.icon" class="text-2xl h-6 lh-150%" :class="[toValue(info.icon)]"></div>
-          <RenderComponent :node="info.title" textClassName="font-extrabold h-6 pr-0.5 lh-150%" />
+        <div v-if="info.title" class="flex items-center self-start gap-1 rounded-full bg-gray-300 p-1.5 text-gray-800">
+          <div v-if="info.icon" class="h-6 text-2xl lh-150%" :class="[toValue(info.icon)]" />
+          <RenderComponent :node="info.title" text-class-name="font-extrabold h-6 pr-0.5 lh-150%" />
         </div>
-        <div v-if="!toValue(info.hideClose)" class="common-modal-close-btn transition-shadow,colors"
-          @click="$emit('cancel')">
-          <div class="i-mingcute-close-fill"></div>
+        <div
+          v-if="!toValue(info.hideClose)" class="common-modal-close-btn transition-shadow,colors"
+          @click="$emit('cancel')"
+        >
+          <div class="i-mingcute-close-fill" />
         </div>
-        <div v-else></div>
+        <div v-else />
       </div>
       <template v-if="info.content">
-        <RenderComponent :node="info.content" className="relative z-2" textClassName="text-center font-bold text-xl" />
+        <RenderComponent :node="info.content" class-name="relative z-2" text-class-name="text-center font-bold text-xl" />
       </template>
       <div
         v-if="!toValue(info.hideCancel) || !toValue(info.hideConfirm) || (!toValue(info.hideCustomTools) && info.customTools)"
-        class="flex justify-end gap-5 items-center z-0 relative">
+        class="relative z-0 flex items-center justify-end gap-5"
+      >
         <RenderComponent v-if="info.customTools" :node="info.customTools" />
-        <BaseButton v-if="!toValue(info.hideCancel)" @click="$emit('cancel')"
-          :disabled="toValue(info.loading) || toValue(info.disabledCancel)" :ghost="true">
+        <BaseButton
+          v-if="!toValue(info.hideCancel)" :disabled="toValue(info.loading) || toValue(info.disabledCancel)"
+          :ghost="true" @click="$emit('cancel')"
+        >
           {{ toValue(info.cancelText) || 'Cancel' }}
         </BaseButton>
-        <BaseButton v-if="!toValue(info.hideConfirm)" @click="$emit('confirm')" :loading="toValue(info.loading)"
-          :disabled="toValue(info.disabledConfirm)">
+        <BaseButton
+          v-if="!toValue(info.hideConfirm)" :loading="toValue(info.loading)" :disabled="toValue(info.disabledConfirm)"
+          @click="$emit('confirm')"
+        >
           {{ toValue(info.confirmText) || 'OK' }}
         </BaseButton>
       </div>

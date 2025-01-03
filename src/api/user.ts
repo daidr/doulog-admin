@@ -1,4 +1,4 @@
-import { instance } from "@/utils/axios";
+import { instance } from '@/utils/axios'
 
 export interface UserInfo {
   id: number
@@ -22,13 +22,13 @@ export async function getSelfUserInfo(): Promise<UserInfoWithLogged> {
   const result = await instance.get<UserInfo>('/api/x/user')
   if (result.data.id === 0) {
     return {
-      isLogged: false
+      isLogged: false,
     }
   }
 
   return {
     isLogged: true,
-    ...result.data
+    ...result.data,
   }
 }
 
@@ -36,97 +36,96 @@ export async function getUserInfo(uid: number | string): Promise<UserInfo | fals
   const result = await instance.get<UserInfo>(`/api/x/user/${uid}`)
 
   if (!result) {
-    return false;
+    return false
   }
 
   return result.data
 }
 
-
 export async function updateSelfUsername(name: string): Promise<boolean> {
   const result = await instance.put('/api/x/user/name', {
-    name
+    name,
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 export async function updateUsername(uid: number, name: string): Promise<boolean> {
   const result = await instance.put(`/api/x/user/name/${uid}`, {
-    name
+    name,
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 export async function updateEmail(uid: number, email: string): Promise<boolean> {
   const result = await instance.put(`/api/x/user/email/${uid}`, {
-    email
+    email,
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 export async function updateHomepage(uid: number, homepage: string): Promise<boolean> {
   const result = await instance.put(`/api/x/user/homepage/${uid}`, {
-    homepage
+    homepage,
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 export async function updateMotto(uid: number, motto: string): Promise<boolean> {
   const result = await instance.put(`/api/x/user/motto/${uid}`, {
-    motto
+    motto,
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
-  return true;
+  return true
 }
 
 export async function getUserList(props: {
-  keyword?: string,
-  page?: number,
+  keyword?: string
+  page?: number
   size?: number
 } = {}): Promise<{
-  total: number,
+  total: number
   list: UserInfo[]
 } | false> {
-  const { keyword, page = 1, size = 10 } = props;
+  const { keyword, page = 1, size = 10 } = props
 
   const result = await instance.get('/api/x/user/list', {
     params: {
       keyword,
       page,
       page_size: size,
-    }
+    },
   })
 
   if (!result) {
-    return false;
+    return false
   }
 
   return {
     total: result.data.total,
-    list: result.data.list
+    list: result.data.list,
   }
 }

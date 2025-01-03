@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RenderComponent } from '@/utils/comp';
 import type { ToastInfo } from '.'
+import { RenderComponent } from '@/utils/comp'
 import { toValue } from 'vue'
 
 const props = defineProps<{
@@ -13,12 +13,12 @@ const DEFAULT_ICONS = {
   success: 'i-mingcute-check-circle-line',
   error: 'i-mingcute-close-circle-line',
   warning: 'i-mingcute-warning-line',
-  info: 'i-mingcute-information-line'
+  info: 'i-mingcute-information-line',
 }
 
-let timer: number;
-const paused = ref(false);
-const totalTime = ref(0);
+let timer: number
+const paused = ref(false)
+const totalTime = ref(0)
 const progress = computed(() => {
   if (!props.info.duration) return 0
   if (typeof totalTime.value !== 'number') return 0
@@ -52,19 +52,21 @@ onUnmounted(() => {
 <template>
   <div ref="ToastRef" class="toast" @mouseenter="paused = true" @mouseleave="paused = false">
     <div class="toast-icon">
-      <div v-if="info.icon" :class="[toValue(info.icon)]"></div>
-      <div v-else :class="DEFAULT_ICONS[info.type || 'info']"></div>
+      <div v-if="info.icon" :class="[toValue(info.icon)]" />
+      <div v-else :class="DEFAULT_ICONS[info.type || 'info']" />
       <div class="close-btn" @click="$emit('close')">
-        <div class="text-base i-mingcute-close-line"></div>
+        <div class="i-mingcute-close-line text-base" />
       </div>
     </div>
     <div class="toast-message">
-      <RenderComponent :node="info.content" textClassName="text-base" />
+      <RenderComponent :node="info.content" text-class-name="text-base" />
     </div>
     <div v-if="info.duration" class="toast-progress">
-      <div :style="{
-    width: `${progress}%`
-  }"></div>
+      <div
+        :style="{
+          width: `${progress}%`,
+        }"
+      />
     </div>
   </div>
 </template>

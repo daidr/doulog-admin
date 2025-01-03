@@ -1,23 +1,23 @@
-import { updateHomepage, type UserInfo } from "@/api/user";
-import BaseInput from "@/components/base/BaseInput.vue";
-import { useToast } from "@/composables/useToast";
+import { updateHomepage, type UserInfo } from '@/api/user'
+import BaseInput from '@/components/base/BaseInput.vue'
+import { useToast } from '@/composables/useToast'
 
-export const useChangeHomepageModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
+export function useChangeHomepageModal(user: UserInfo, successCb?: () => void | Promise<void>) {
   const loading = ref(false)
   const valid = ref(true)
   const homepage = ref(user.homepage)
   const { success } = useToast()
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (closeModal: () => void) => {
     loading.value = true
     try {
       if (await updateHomepage(user.id, homepage.value)) {
         await successCb?.()
         success({
           content: '主页修改成功',
-          duration: 2000
+          duration: 2000,
         })
-        modal.close()
+        closeModal()
       }
     } finally {
       loading.value = false
@@ -28,29 +28,29 @@ export const useChangeHomepageModal = (user: UserInfo, successCb?: () => void | 
     title: computed(() => '修改主页'),
     icon: 'i-mingcute-pencil-3-fill',
     content: () => h(BaseInput, {
-      min: 1,
-      max: 99,
-      modelValue: homepage.value,
+      'min': 1,
+      'max': 99,
+      'modelValue': homepage.value,
       'onUpdate:modelValue': (val: string) => {
         homepage.value = val
       },
-      valid: valid.value,
+      'valid': valid.value,
       'onUpdate:valid': (val: boolean) => {
         valid.value = val
       },
-      wrapperClass: 'w-full',
-      placeholder: '请输入主页',
-      disabled: loading.value,
+      'wrapperClass': 'w-full',
+      'placeholder': '请输入主页',
+      'disabled': loading.value,
     }),
     cancelText: computed(() => '取消'),
     loading,
     confirmText: computed(() => '修改'),
     disabledConfirm: computed(() => !valid.value),
     onConfirm() {
-      handleConfirm()
-      return false;
-    }
+      handleConfirm(modal.close)
+      return false
+    },
   })
 
-  return modal;
+  return modal
 }

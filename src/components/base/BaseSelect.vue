@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { PropType, SelectHTMLAttributes } from 'vue';
+import type { SelectHTMLAttributes } from 'vue'
 
 export interface BaseSelectOptionItem {
-  label: string;
-  value: string | number;
-  disabled?: boolean;
+  label: string
+  value: string | number
+  disabled?: boolean
 }
 
 export interface BaseSelectOptionGroup {
-  label: string;
-  options: BaseSelectOptionItem[];
-  disabled?: boolean;
+  label: string
+  options: BaseSelectOptionItem[]
+  disabled?: boolean
 }
 
 interface BaseSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
-  wrapperClass?: any;
-  disabled?: boolean;
-  options: (BaseSelectOptionItem | BaseSelectOptionGroup)[];
-  size?: 'small' | 'medium' | 'large';
+  wrapperClass?: any
+  disabled?: boolean
+  options: (BaseSelectOptionItem | BaseSelectOptionGroup)[]
+  size?: 'small' | 'medium' | 'large'
 }
 
 withDefaults(defineProps<BaseSelectProps>(), {
@@ -29,10 +29,12 @@ const value = defineModel<string | number>()
 </script>
 
 <template>
-  <div class="base-select" :class="[
-    `size-${size}`,
-    { disabled }
-  ]">
+  <div
+    class="base-select" :class="[
+      `size-${size}`,
+      { disabled },
+    ]"
+  >
     <select v-model="value">
       <template v-for="option of options" :key="option.label">
         <optgroup v-if="('options' in option)" :label="option.label" :disabled="option.disabled">

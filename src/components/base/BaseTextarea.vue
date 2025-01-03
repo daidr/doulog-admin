@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { TextareaHTMLAttributes } from 'vue';
+import type { TextareaHTMLAttributes } from 'vue'
 
 interface BaseTextareaProps extends /* @vue-ignore */ TextareaHTMLAttributes {
-  max?: number;
-  min?: number;
-  wrapperClass?: any;
-  disabled?: boolean;
+  max?: number
+  min?: number
+  wrapperClass?: any
+  disabled?: boolean
 }
 
 const props = defineProps<BaseTextareaProps>()
@@ -14,66 +14,68 @@ const model = defineModel<string>({ default: '' })
 const modelValid = defineModel<boolean>('valid', { default: true })
 
 watch(() => model.value, () => {
-  let temp = true;
+  let temp = true
   if (typeof props.max === 'number') {
-    temp = model.value.length <= props.max;
+    temp = model.value.length <= props.max
   }
 
   if (typeof props.min === 'number') {
-    temp = temp && model.value.length >= props.min;
+    temp = temp && model.value.length >= props.min
   }
 
-  modelValid.value = temp;
+  modelValid.value = temp
 }, {
-  immediate: true
+  immediate: true,
 })
 
-const LengthTextComp = defineComponent((textProps) => () => h('div', {
+const LengthTextComp = defineComponent(textProps => () => h('div', {
   class: {
     'error': textProps.isError,
     'length-check-text': true,
-  }
+  },
 }, textProps.text), {
   props: {
     isError: Boolean,
-    text: String
-  }
+    text: String,
+  },
 })
 
 const LengthCheckComp = defineComponent(() => {
   return () => {
-    const nodes: VNode[] = [];
+    const nodes: VNode[] = []
 
     if (typeof props.max === 'number') {
       nodes.push(h(LengthTextComp, { isError: model.value.length > props.max, text: `${model.value.length}/${props.max}` }))
     }
 
-
     if (typeof props.min === 'number') {
-      const error = model.value.length < props.min;
-      const node = h(LengthTextComp, { isError: error, text: `min: ${props.min}` });
+      const error = model.value.length < props.min
+      const node = h(LengthTextComp, { isError: error, text: `min: ${props.min}` })
       if (error) {
-        nodes.unshift(node);
+        nodes.unshift(node)
       } else {
-        nodes.push(node);
+        nodes.push(node)
       }
     }
 
-
-    return h('div', nodes);
+    return h('div', nodes)
   }
 })
 </script>
 
 <template>
-  <div class="base-input" :class="[wrapperClass, {
-    'disabled': props.disabled,
-  }]">
+  <div
+    class="base-input" :class="[wrapperClass, {
+      disabled: props.disabled,
+    }]"
+  >
     <textarea v-bind="$attrs" v-model="model" :disabled="disabled" />
     <div class="absolute bottom-0 left-0 h-[calc(1.6em+0.5rem)]">
-      <div class="length-check" v-if="typeof max === 'number' || typeof min === 'number'" :class="{
-    [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true
-  }">
+      <div
+        v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
+          [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
+        }"
+      >
         <LengthCheckComp />
       </div>
     </div>

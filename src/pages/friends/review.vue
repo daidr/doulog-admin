@@ -3,13 +3,17 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-screen">friends/review</div>
+  <div class="h-screen flex items-center justify-center">
+    friends/review
+  </div>
 </template>
 
 <style scoped></style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "友链审核"
   }
-}</route>
+}
+</route>

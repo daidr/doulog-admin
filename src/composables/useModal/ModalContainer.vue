@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Modal from './Modal.vue'
 import type { ModalInfo } from './'
+import Modal from './Modal.vue'
 
 const props = defineProps<{
   modals: ModalInfo[]
@@ -14,15 +14,15 @@ const emit = defineEmits<{
 
 const maskVisible = computed(() => props.modals.length > 0)
 
-const handleCancel = (modal: ModalInfo) => {
+function handleCancel(modal: ModalInfo) {
   emit('cancel', modal)
 }
 
-const handleConfirm = (modal: ModalInfo) => {
+function handleConfirm(modal: ModalInfo) {
   emit('confirm', modal)
 }
 
-const handleClose = (modal: ModalInfo) => {
+function handleClose(modal: ModalInfo) {
   if (!modal) return
   emit('close', modal)
 }
@@ -30,11 +30,11 @@ const handleClose = (modal: ModalInfo) => {
 const MaxTranslateValue = 15
 const TranslateFactor = 2.1
 const TranslateCache = new Map<number, number>()
-const getTranslateValue = (index: number) => {
+function getTranslateValue(index: number) {
   if (TranslateCache.has(index)) {
     return TranslateCache.get(index)!
   }
-  const value = -MaxTranslateValue * (1 - Math.pow(1 + 1 / TranslateFactor, -index))
+  const value = -MaxTranslateValue * (1 - (1 + 1 / TranslateFactor) ** -index)
   TranslateCache.set(index, value)
   return value
 }
@@ -42,11 +42,11 @@ const getTranslateValue = (index: number) => {
 const MinScaleValue = 0.4
 const ScaleFactor = 3
 const ScaleCache = new Map<number, number>()
-const getScaleValue = (index: number) => {
+function getScaleValue(index: number) {
   if (ScaleCache.has(index)) {
     return ScaleCache.get(index)!
   }
-  const value = MinScaleValue + (1 - MinScaleValue) * Math.pow(1 + 1 / ScaleFactor, -index)
+  const value = MinScaleValue + (1 - MinScaleValue) * (1 + 1 / ScaleFactor) ** -index
   ScaleCache.set(index, value)
   return value
 }
@@ -54,11 +54,11 @@ const getScaleValue = (index: number) => {
 const MinFilterValue = 0.2
 const FilterFactor = 2.9
 const FilterCache = new Map<number, number>()
-const getBrightnessValue = (index: number) => {
+function getBrightnessValue(index: number) {
   if (FilterCache.has(index)) {
     return FilterCache.get(index)!
   }
-  const value = MinFilterValue + (1 - MinFilterValue) * Math.pow(1 + 1 / FilterFactor, -index)
+  const value = MinFilterValue + (1 - MinFilterValue) * (1 + 1 / FilterFactor) ** -index
   FilterCache.set(index, value)
   return value
 }
@@ -79,7 +79,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', onEscPressed)
 })
-
 </script>
 
 <template>
@@ -88,14 +87,18 @@ onUnmounted(() => {
       <div v-if="maskVisible" class="modal-mask" />
     </Transition>
     <TransitionGroup name="modal" tag="div" class="modal-transition-group">
-      <div v-for="(modal, index) of modals" :key="modal._id"
-        class="transition-transform,filter fixed z-100 top-1/2 left-1/2" :style="{
-        transform: `translateY(${getTranslateValue(modals.length - 1 - index)}vh) scale(${getScaleValue(modals.length - 1 - index)})`,
-        filter: `brightness(${getBrightnessValue(modals.length - 1 - index)})`,
-      }">
-        <Modal :info="modal" @cancel="handleCancel(modal)" @confirm="handleConfirm(modal)" :class="{
-        'pointer-events-none': index < modals.length - 1,
-      }" />
+      <div
+        v-for="(modal, index) of modals" :key="modal._id"
+        class="fixed left-1/2 top-1/2 z-100 transition-transform,filter" :style="{
+          transform: `translateY(${getTranslateValue(modals.length - 1 - index)}vh) scale(${getScaleValue(modals.length - 1 - index)})`,
+          filter: `brightness(${getBrightnessValue(modals.length - 1 - index)})`,
+        }"
+      >
+        <Modal
+          :info="modal" :class="{
+            'pointer-events-none': index < modals.length - 1,
+          }" @cancel="handleCancel(modal)" @confirm="handleConfirm(modal)"
+        />
       </div>
     </TransitionGroup>
   </Teleport>

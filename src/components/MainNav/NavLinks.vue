@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { NAV_ITEMS } from '@/constants/nav';
-import LinkItem from './LinkItem.vue';
+import { NAV_ITEMS } from '@/constants/nav'
+import LinkItem from './LinkItem.vue'
 
 const { userInfo } = storeToRefs(useUserStore())
 
@@ -20,19 +20,22 @@ const showEndMask = computed(() => {
 </script>
 
 <template>
-  <div v-if="userInfo.isLogged && userInfo.isAdmin" class="main-nav-links max-h-[calc(100%-100px)] flex-grow overflow-y-scroll" ref="NavLinksRef" :class="{
-    'start-mask': showStartMask,
-    'end-mask': showEndMask,
-  }">
-    <div class="flex pt-3 flex-col gap-3 w-full">
+  <div
+    v-if="userInfo.isLogged && userInfo.isAdmin" ref="NavLinksRef" class="main-nav-links max-h-[calc(100%-100px)] flex-grow overflow-y-scroll" :class="{
+      'start-mask': showStartMask,
+      'end-mask': showEndMask,
+    }"
+  >
+    <div class="w-full flex flex-col gap-3 pt-3">
       <div v-for="category of NAV_ITEMS" :key="category.name + category.root">
-        <p v-if="!category.root" class="text-xs text-gray-400 mb-1 text-center w-[var(--item-width)]">
+        <p v-if="!category.root" class="mb-1 w-[var(--item-width)] text-center text-xs text-gray-400">
           {{
-          category.name
-          }}</p>
+            category.name
+          }}
+        </p>
         <div class="flex flex-col gap-1">
-          <LinkItem v-for="item of category.items" :key="item.name" :to="item.to" activeHighlight>
-            <div class="w-5 h-5" :class="item.icon"></div>
+          <LinkItem v-for="item of category.items" :key="item.name" :to="item.to" active-highlight>
+            <div class="h-5 w-5" :class="item.icon" />
             <template #extra>
               {{ item.name }}
             </template>

@@ -1,9 +1,9 @@
 interface WebAuthnErrorItem {
-  fallback?: string;
+  fallback?: string
   msg?: {
-    raw: string;
-    text: string;
-  }[];
+    raw: string
+    text: string
+  }[]
 }
 
 export const WebAuthnErrorMap: Record<string, WebAuthnErrorItem> = {
@@ -17,8 +17,8 @@ export const WebAuthnErrorMap: Record<string, WebAuthnErrorItem> = {
       {
         raw: 'The request is not allowed by the user agent or the platform in the current context, possibly because the user denied permission.',
         text: '操作超时/被取消',
-      }
-    ]
+      },
+    ],
   },
   InvalidStateError: {
     fallback: '状态异常：未知错误',
@@ -26,29 +26,29 @@ export const WebAuthnErrorMap: Record<string, WebAuthnErrorItem> = {
       {
         raw: 'The user attempted to register an authenticator that contains one of the credentials already registered with the relying party.',
         text: '该设备已经注册过',
-      }
-    ]
-  }
+      },
+    ],
+  },
 }
 
 export function getWebAuthnToastTextByError(err: Error): string {
-  const errName = err.name;
-  const errMsg = err.message;
+  const errName = err.name
+  const errMsg = err.message
   console.log('errName', errName)
   console.log('errMsg', errMsg)
 
   if (WebAuthnErrorMap[errName]) {
-    const errMap = WebAuthnErrorMap[errName];
+    const errMap = WebAuthnErrorMap[errName]
     if (!errMap.msg) {
-      return errMap.fallback || '未知错误';
+      return errMap.fallback || '未知错误'
     }
     for (let i = 0; i < errMap.msg.length; i++) {
-      if (errMsg.indexOf(errMap.msg[i].raw) !== -1) {
-        return errMap.msg[i].text;
+      if (errMsg.includes(errMap.msg[i].raw)) {
+        return errMap.msg[i].text
       }
     }
-    return errMap.fallback || '未知错误';
+    return errMap.fallback || '未知错误'
   }
 
-  return '未知错误';
+  return '未知错误'
 }

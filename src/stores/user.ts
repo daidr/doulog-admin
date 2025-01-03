@@ -1,25 +1,25 @@
-import { ref } from 'vue'
-import { defineStore } from 'pinia'
 import { getSelfUserInfo, type UserInfoWithLogged } from '@/api/user'
 import { STORAGE_TOKEN } from '@/constants/base'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
 export const useUserStore = defineStore('user', () => {
   const isFetching = ref(false)
   const userInfo = shallowRef<UserInfoWithLogged>({
-    isLogged: false
+    isLogged: false,
   })
 
   const fetchUserInfo = async () => {
     isFetching.value = true
     try {
-      const result = await getSelfUserInfo();
+      const result = await getSelfUserInfo()
       userInfo.value = result
     } finally {
       isFetching.value = false
     }
   }
 
-  const token = useLocalStorage(STORAGE_TOKEN, "")
+  const token = useLocalStorage(STORAGE_TOKEN, '')
 
   const setToken = (newToken: string) => {
     token.value = newToken
@@ -33,7 +33,7 @@ export const useUserStore = defineStore('user', () => {
       userInfo.value = { isLogged: false }
     }
   }, {
-    immediate: true
+    immediate: true,
   })
 
   return { isFetching, userInfo, setToken, fetchUserInfo }

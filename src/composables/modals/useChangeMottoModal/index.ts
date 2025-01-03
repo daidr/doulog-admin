@@ -1,23 +1,23 @@
-import { updateMotto, type UserInfo } from "@/api/user";
-import BaseTextarea from "@/components/base/BaseTextarea.vue";
-import { useToast } from "@/composables/useToast";
+import { updateMotto, type UserInfo } from '@/api/user'
+import BaseTextarea from '@/components/base/BaseTextarea.vue'
+import { useToast } from '@/composables/useToast'
 
-export const useChangeMottoModal = (user: UserInfo, successCb?: () => void | Promise<void>) => {
+export function useChangeMottoModal(user: UserInfo, successCb?: () => void | Promise<void>) {
   const loading = ref(false)
   const valid = ref(true)
   const motto = ref(user.motto)
   const { success } = useToast()
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (closeModal: () => void) => {
     loading.value = true
     try {
       if (await updateMotto(user.id, motto.value || '')) {
         await successCb?.()
         success({
           content: '座右铭修改成功',
-          duration: 2000
+          duration: 2000,
         })
-        modal.close()
+        closeModal()
       }
     } finally {
       loading.value = false
@@ -28,31 +28,31 @@ export const useChangeMottoModal = (user: UserInfo, successCb?: () => void | Pro
     title: computed(() => '修改座右铭'),
     icon: 'i-mingcute-pencil-3-fill',
     content: () => h(BaseTextarea, {
-      max: 300,
-      modelValue: motto.value,
+      'max': 300,
+      'modelValue': motto.value,
       'onUpdate:modelValue': (val: string) => {
         motto.value = val
       },
-      valid: valid.value,
+      'valid': valid.value,
       'onUpdate:valid': (val: boolean) => {
         valid.value = val
       },
-      style: {
-        maxHeight: '80vh'
+      'style': {
+        maxHeight: '80vh',
       },
-      wrapperClass: 'w-full',
-      placeholder: '这个人什么都没留下～',
-      disabled: loading.value,
+      'wrapperClass': 'w-full',
+      'placeholder': '这个人什么都没留下～',
+      'disabled': loading.value,
     }),
     cancelText: computed(() => '取消'),
     loading,
     confirmText: computed(() => '修改'),
     disabledConfirm: computed(() => !valid.value),
     onConfirm() {
-      handleConfirm()
-      return false;
-    }
+      handleConfirm(modal.close)
+      return false
+    },
   })
 
-  return modal;
+  return modal
 }

@@ -2,7 +2,7 @@
 import BasePopover from './BasePopover.vue'
 
 export type Menu = (MenuItem | MenuSeparator)[]
-export type MenuItem = {
+export interface MenuItem {
   type: 'item'
   label: string
   icon?: string
@@ -12,26 +12,26 @@ export type MenuItem = {
   onClick?: () => void
 }
 
-export type MenuSeparator = {
+export interface MenuSeparator {
   type: 'separator'
 }
 
-const props = withDefaults(defineProps<{
-  menu: Menu,
-  position?: "top" | "top-left" | "top-right" | "bottom" | "bottom-left" | "bottom-right" | "left" | "left-top" | "left-bottom" | "right" | "right-top" | "right-bottom",
-  gap?: number,
+withDefaults(defineProps<{
+  menu: Menu
+  position?: 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'left-top' | 'left-bottom' | 'right' | 'right-top' | 'right-bottom'
+  gap?: number
 }>(), {
-  position: "left-top",
-  gap: 10
+  position: 'left-top',
+  gap: 10,
 })
 
 defineSlots<{
-  default(props: { open: boolean }): any
+  default: (props: { open: boolean }) => any
 }>()
 
 const showMenu = ref(false)
 
-const handleClick = (item: MenuItem) => {
+function handleClick(item: MenuItem) {
   if (item.disabled) return
   if (item.keepOpen) return
   showMenu.value = false
@@ -49,12 +49,16 @@ const handleClick = (item: MenuItem) => {
       <template #content>
         <div class="base-menu">
           <template v-for="(item, index) of menu" :key="index">
-            <div v-if="item.type === 'item'" class="menu-item" :class="[item.class, { disabled: item.disabled }]"
-              @click="handleClick(item)">
+            <div
+              v-if="item.type === 'item'" class="menu-item" :class="[item.class, { disabled: item.disabled }]"
+              @click="handleClick(item)"
+            >
               <div class="menu-item-icon">
                 <div :class="[item.icon]" />
               </div>
-              <div class="menu-item-label">{{ item.label }}</div>
+              <div class="menu-item-label">
+                {{ item.label }}
+              </div>
             </div>
             <div v-else-if="item.type === 'separator'" class="menu-separator" />
           </template>

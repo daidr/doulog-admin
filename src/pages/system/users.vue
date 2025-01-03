@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { getUserList, type UserInfo } from '@/api/user';
-import BaseEllipsisText from '@/components/base/BaseEllipsisText.vue';
-import BaseInput from '@/components/base/BaseInput.vue';
-import BaseTable from '@/components/base/BaseTable.vue';
-import UserNameCell from '@/components/user/UserNameCell.vue';
-import UserPageEditMenu from '@/components/user/UserPageEditMenu.vue';
-import UserRoleCell from '@/components/user/UserRoleCell.vue';
-import { formatTime } from '@/utils/time';
+import { getUserList, type UserInfo } from '@/api/user'
+import BaseEllipsisText from '@/components/base/BaseEllipsisText.vue'
+import BaseInput from '@/components/base/BaseInput.vue'
+import BaseTable from '@/components/base/BaseTable.vue'
+import UserNameCell from '@/components/user/UserNameCell.vue'
+import UserPageEditMenu from '@/components/user/UserPageEditMenu.vue'
+import UserRoleCell from '@/components/user/UserRoleCell.vue'
+import { formatTime } from '@/utils/time'
 
 const userTableColumns = computed(() => [{
   label: '用户名',
@@ -52,11 +52,11 @@ function handleSearch() {
   keyword.value = searchValue.value
 }
 
-const userList = shallowRef<UserInfo[]>([]);
-let currentInstance: number = 0;
+const userList = shallowRef<UserInfo[]>([])
+let currentInstance: number = 0
 
 async function fetchData(_page: number, _size: number) {
-  let _instance = currentInstance = Math.random()
+  const _instance = currentInstance = Math.random()
   try {
     loading.value = true
     const result = await getUserList({
@@ -75,9 +75,9 @@ async function fetchData(_page: number, _size: number) {
     page.value = _page
     size.value = _size
   } finally {
-    if (_instance !== currentInstance) return
-
-    loading.value = false
+    if (_instance === currentInstance) {
+      loading.value = false
+    }
   }
 }
 
@@ -85,25 +85,27 @@ watch(keyword, () => {
   fetchData(1, size.value)
 }, { immediate: true })
 
-const refresh = async () => {
+async function refresh() {
   await fetchData(page.value, size.value)
 }
 </script>
 
 <template>
-  <div class="flex flex-col h-100dvh p-1">
+  <div class="h-100dvh flex flex-col p-1">
     <div class="page-header">
-      <BaseInput placeholder="搜索用户/邮箱" class="w-[min(400px,80vw)]" v-model="searchValue" @keyup.enter="handleSearch" />
+      <BaseInput v-model="searchValue" placeholder="搜索用户/邮箱" class="w-[min(400px,80vw)]" @keyup.enter="handleSearch" />
     </div>
-    <BaseTable :columns="userTableColumns" :data="userList" rowKey="id" scrollHeight="calc(100dvh - 45px - 48px - 48px)"
-      scrollWidth="max(2500px, 100vw)" tableClass="ring-1 rounded-3 ring-gray-300 overflow-hidden" paginatorClass="pt-2"
+    <BaseTable
+      :columns="userTableColumns" :data="userList" row-key="id" scroll-height="calc(100dvh - 45px - 48px - 48px)"
+      scroll-width="max(2500px, 100vw)" table-class="ring-1 rounded-3 ring-gray-300 overflow-hidden" paginator-class="pt-2"
       :paginator="{
         current: page,
         total,
         size,
         disabled: loading,
         showSwitch: false,
-      }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(1, size)">
+      }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(1, size)"
+    >
       <template #column-name="{ item }">
         <UserNameCell :user="item" />
       </template>
@@ -135,8 +137,10 @@ const refresh = async () => {
 }
 </style>
 
-<route lang="json">{
+<route lang="json">
+{
   "meta": {
     "title": "用户管理"
   }
-}</route>
+}
+</route>

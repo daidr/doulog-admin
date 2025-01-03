@@ -1,22 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const props = withDefaults(defineProps<{
-  position?: "top" | "top-left" | "top-right" | "bottom" | "bottom-left" | "bottom-right" | "left" | "left-top" | "left-bottom" | "right" | "right-top" | "right-bottom",
-  gap?: number,
-  trigger?: "click" | "hover" | "manual",
+  position?: 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'left-top' | 'left-bottom' | 'right' | 'right-top' | 'right-bottom'
+  gap?: number
+  trigger?: 'click' | 'hover' | 'manual'
 }>(), {
-  position: "left-top",
+  position: 'left-top',
   gap: 10,
-  trigger: "click",
+  trigger: 'click',
 })
 
-defineSlots<{
-  default(props: { open: boolean }): any
-  content(): any
+const emit = defineEmits<{
+  tryOpen: []
+  tryClose: []
 }>()
 
-const open = defineModel<boolean>("open", {
+defineSlots<{
+  default: (props: { open: boolean }) => any
+  content: () => any
+}>()
+
+const open = defineModel<boolean>('open', {
   default: false,
 })
 
@@ -29,11 +34,11 @@ const { width: popoverWidth, height: popoverHeight } = useElementBounding(Popove
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 
 onClickOutside(PopoverRef, () => {
-  if (props.trigger === "click") {
+  if (props.trigger === 'click') {
     open.value = false
   }
 }, {
-  ignore: [SlotRef]
+  ignore: [SlotRef],
 })
 
 const popoverPosition = ref<{ top: number, left: number }>({ top: 0, left: 0 })
@@ -42,28 +47,28 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
   if (!open.value) return
   update()
   // calc top
-  let top = 0;
+  let top = 0
   switch (props.position) {
-    case "top":
-    case "top-left":
-    case "top-right":
+    case 'top':
+    case 'top-left':
+    case 'top-right':
       top = slotY.value - popoverHeight.value - props.gap
       // 变成 bottom
       if (top < 0) {
         top = slotY.value + slotHeight.value + props.gap
       }
       break
-    case "bottom":
-    case "bottom-left":
-    case "bottom-right":
+    case 'bottom':
+    case 'bottom-left':
+    case 'bottom-right':
       top = slotY.value + slotHeight.value + props.gap
       // 变成 top
       if (top + popoverHeight.value > windowHeight.value) {
         top = slotY.value - popoverHeight.value - props.gap
       }
       break
-    case "left":
-    case "right":
+    case 'left':
+    case 'right':
       top = slotY.value + (slotHeight.value - popoverHeight.value) / 2
       if (top < 0) {
         top = slotY.value
@@ -72,17 +77,17 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
       }
 
       break
-    case "left-top":
-    case "right-top":
+    case 'left-top':
+    case 'right-top':
       top = slotY.value
       if (top < 0) {
-        top = slotY.value;
+        top = slotY.value
       } else if (top + popoverHeight.value > windowHeight.value) {
         top = slotY.value + slotHeight.value - popoverHeight.value
       }
       break
-    case "left-bottom":
-    case "right-bottom":
+    case 'left-bottom':
+    case 'right-bottom':
       top = slotY.value + slotHeight.value - popoverHeight.value
       if (top < 0) {
         top = 0
@@ -90,10 +95,10 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
       break
   }
   // calc left
-  let left = 0;
+  let left = 0
   switch (props.position) {
-    case "top":
-    case "bottom":
+    case 'top':
+    case 'bottom':
       left = slotX.value + (slotWidth.value - popoverWidth.value) / 2
       if (left < 0) {
         left = slotX.value
@@ -101,41 +106,41 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
         left = slotX.value + slotWidth.value - popoverWidth.value
       }
       break
-    case "top-right":
-    case "bottom-right":
+    case 'top-right':
+    case 'bottom-right':
       left = slotX.value + slotWidth.value - popoverWidth.value
       if (left < 0) {
         left = slotX.value
       }
       break
-    case "left":
+    case 'left':
       left = slotX.value - popoverWidth.value - props.gap
       if (left < 0) {
         left = slotX.value + slotWidth.value + props.gap
       }
       break
-    case "top-left":
-    case "bottom-left":
+    case 'top-left':
+    case 'bottom-left':
       left = slotX.value
       if (left + popoverWidth.value > windowWidth.value) {
         left = slotX.value + slotWidth.value - popoverWidth.value
       }
       break
-    case "right":
+    case 'right':
       left = slotX.value + slotWidth.value + props.gap
       if (left + popoverWidth.value > windowWidth.value) {
         left = slotX.value - popoverWidth.value - props.gap
       }
       break
-    case "left-top":
-    case "left-bottom":
+    case 'left-top':
+    case 'left-bottom':
       left = slotX.value - popoverWidth.value - props.gap
       if (left < 0) {
         left = slotX.value + slotWidth.value + props.gap
       }
       break
-    case "right-top":
-    case "right-bottom":
+    case 'right-top':
+    case 'right-bottom':
       left = slotX.value + slotWidth.value + props.gap
       if (left + popoverWidth.value > windowWidth.value) {
         left = slotX.value - popoverWidth.value - props.gap
@@ -144,62 +149,57 @@ watch([slotX, slotY, slotWidth, slotHeight, popoverWidth, popoverHeight, windowW
   }
   popoverPosition.value = { top, left }
 }, {
-  flush: 'pre'
+  flush: 'pre',
 })
 
-const handleSlotClick = () => {
-  if (props.trigger === "click") {
+function handleSlotClick() {
+  if (props.trigger === 'click') {
     open.value = !open.value
   }
 }
 
-let hoverCloseTimer: number;
+let hoverCloseTimer: number
 
 onUnmounted(() => {
   clearTimeout(hoverCloseTimer)
 })
 
-const emit = defineEmits<{
-  'try-open': []
-  'try-close': []
-}>()
-
-useEventListener(SlotRef, "mouseenter", () => {
-  if (props.trigger === "hover" || props.trigger === "manual") {
+useEventListener(SlotRef, 'mouseenter', () => {
+  if (props.trigger === 'hover' || props.trigger === 'manual') {
     clearTimeout(hoverCloseTimer)
-    if (props.trigger === "hover") {
+    if (props.trigger === 'hover') {
       open.value = true
     } else {
-      emit('try-open')
+      emit('tryOpen')
     }
   }
 })
 
-useEventListener(SlotRef, "mouseleave", () => {
-  if (props.trigger === "hover" || props.trigger === "manual") {
+useEventListener(SlotRef, 'mouseleave', () => {
+  if (props.trigger === 'hover' || props.trigger === 'manual') {
     hoverCloseTimer = setTimeout(() => {
-      if (props.trigger === "hover") {
+      if (props.trigger === 'hover') {
         open.value = false
       } else {
-        emit('try-close')
+        emit('tryClose')
       }
     }, 200)
   }
 })
 
-useEventListener(PopoverRef, "mouseenter", () => {
-  if (props.trigger === "hover" || props.trigger === "manual") {
+useEventListener(PopoverRef, 'mouseenter', () => {
+  if (props.trigger === 'hover' || props.trigger === 'manual') {
     clearTimeout(hoverCloseTimer)
   }
 })
 
-useEventListener(PopoverRef, "mouseleave", () => {
-  if (props.trigger === "hover" || props.trigger === "manual") {
+useEventListener(PopoverRef, 'mouseleave', () => {
+  if (props.trigger === 'hover' || props.trigger === 'manual') {
     hoverCloseTimer = setTimeout(() => {
-      if (props.trigger === "hover") {
+      if (props.trigger === 'hover') {
         open.value = false
       } else {
-        emit('try-close')
+        emit('tryClose')
       }
     }, 200)
   }
@@ -212,10 +212,12 @@ useEventListener(PopoverRef, "mouseleave", () => {
   </div>
   <Teleport to="#teleport-container">
     <Transition name="fade">
-      <div v-if="open" ref="PopoverRef" class="base-popover" :style="{
-        top: `${popoverPosition.top}px`,
-        left: `${popoverPosition.left}px`
-      }">
+      <div
+        v-if="open" ref="PopoverRef" class="base-popover" :style="{
+          top: `${popoverPosition.top}px`,
+          left: `${popoverPosition.left}px`,
+        }"
+      >
         <slot name="content" />
       </div>
     </Transition>

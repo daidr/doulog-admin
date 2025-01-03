@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { MediaInfo } from '@/api/media';
-import useImageExpand from '@/composables/useImageExpand';
-import prettyBytes from 'pretty-bytes';
-import MediaMetaContainer from './MediaMetaContainer.vue';
+import type { MediaInfo } from '@/api/media'
+import useImageExpand from '@/composables/useImageExpand'
+import prettyBytes from 'pretty-bytes'
+import MediaMetaContainer from './MediaMetaContainer.vue'
 
 const props = defineProps<{
   media: MediaInfo
@@ -23,7 +23,7 @@ const isLandscape = computed(() => props.media.width > props.media.height)
  * 非 expand 模式：contain
  */
 const canBeExpand = computed(() => {
-  if (tinyMode.value) return false;
+  if (tinyMode.value) return false
 
   if (props.maxHeight < props.imageSize || props.maxWidth < props.imageSize) return false
 
@@ -46,26 +46,26 @@ const canBeExpand = computed(() => {
 const imageContainerSize = computed(() => {
   if (tinyMode.value) {
     return {
-      width: props.imageSize + 'px',
-      height: props.imageSize + 'px',
+      width: `${props.imageSize}px`,
+      height: `${props.imageSize}px`,
     }
   }
   if (!canBeExpand.value) {
     return {
-      width: props.imageSize + 'px',
-      height: props.imageSize + 0.1 + 'px',
+      width: `${props.imageSize}px`,
+      height: `${props.imageSize + 0.1}px`,
     }
   }
 
   if (props.media.width > props.media.height) {
     return {
-      height: props.imageSize + 'px',
+      height: `${props.imageSize}px`,
       width: `${props.imageSize * props.media.width / props.media.height}px`,
     }
   }
 
   return {
-    width: props.imageSize + 'px',
+    width: `${props.imageSize}px`,
     height: `${props.imageSize * props.media.height / props.media.width}px`,
   }
 })
@@ -81,7 +81,7 @@ const { zIndex, expanded, show, hide } = useImageExpand(400)
 
 const imageSource = ref(getURLFromId(props.media.id, true))
 
-let sourceTimer: number;
+let sourceTimer: number
 watchEffect(() => {
   clearTimeout(sourceTimer)
   if (tinyMode.value) {
@@ -102,15 +102,15 @@ const transform = ref<[number, number]>([0, 0])
 function handleEnter() {
   if (tinyMode.value) return
   const { width: widthRaw, height: heightRaw } = imageContainerSize.value
-  const width = parseInt(widthRaw)
-  const height = parseInt(heightRaw)
+  const width = Number.parseInt(widthRaw)
+  const height = Number.parseInt(heightRaw)
 
   const rect = MediaRef.value?.getBoundingClientRect()
   if (!rect) return
-  let { x, y } = rect
+  const { x, y } = rect
 
-  let tx = 0;
-  let ty = 0;
+  let tx = 0
+  let ty = 0
 
   if (isLandscape.value) {
     tx = (props.imageSize - width) / 2
@@ -134,7 +134,6 @@ function handleEnter() {
     ty = padding - y
   }
 
-
   transform.value = [tx, ty]
   show()
 }
@@ -146,34 +145,42 @@ function handleLeave() {
 </script>
 
 <template>
-  <div class="size-limit" @mouseenter="handleEnter" @mouseleave="handleLeave" ref="MediaRef">
-    <div class="media-item" :class="{
-      expanded,
-      'tiny-mode': tinyMode
-    }" :style="{
-      '--width': imageContainerSize.width,
-      '--height': imageContainerSize.height,
-      '--image-size': props.imageSize + 'px',
-      zIndex,
-      transform: `translate(${transform[0]}px, ${transform[1]}px)`,
-    }">
-      <MediaMetaContainer v-if="!tinyMode" class="meta" v-model="currentActive">
+  <div ref="MediaRef" class="size-limit" @mouseenter="handleEnter" @mouseleave="handleLeave">
+    <div
+      class="media-item" :class="{
+        expanded,
+        'tiny-mode': tinyMode,
+      }" :style="{
+        '--width': imageContainerSize.width,
+        '--height': imageContainerSize.height,
+        '--image-size': `${props.imageSize}px`,
+        zIndex,
+        'transform': `translate(${transform[0]}px, ${transform[1]}px)`,
+      }"
+    >
+      <MediaMetaContainer v-if="!tinyMode" v-model="currentActive" class="meta">
         {{ media.width }} x {{ media.height }} | {{ media.ext.toUpperCase() }}
       </MediaMetaContainer>
       <div class="image">
-        <img :src="imageSource" :title="media.title" :alt="media.alt" :style="{
-          backgroundColor: `#${media.prominentColor[0]}`
-        }" />
-        <MediaMetaContainer v-if="!tinyMode" class="desc" v-model="currentActive">
+        <img
+          :src="imageSource" :title="media.title" :alt="media.alt" :style="{
+            backgroundColor: `#${media.prominentColor[0]}`,
+          }"
+        >
+        <MediaMetaContainer v-if="!tinyMode" v-model="currentActive" class="desc">
           <table>
             <tbody>
               <tr>
                 <td>Title</td>
-                <td class="line-clamp-2">{{ media.title }}</td>
+                <td class="line-clamp-2">
+                  {{ media.title }}
+                </td>
               </tr>
               <tr v-if="media.alt">
                 <td>Alt</td>
-                <td class="line-clamp-1">{{ media.alt }}</td>
+                <td class="line-clamp-1">
+                  {{ media.alt }}
+                </td>
               </tr>
               <tr>
                 <td>MIME</td>
@@ -181,19 +188,21 @@ function handleLeave() {
               </tr>
               <tr>
                 <td>Size</td>
-                <td>Original {{ prettyBytes(media.extra.original) }}
-                  <br />Thumbnail {{ prettyBytes(media.extra.thumbnail) }}
+                <td>
+                  Original {{ prettyBytes(media.extra.original) }}
+                  <br>Thumbnail {{ prettyBytes(media.extra.thumbnail) }}
                 </td>
               </tr>
               <tr>
                 <td>Color</td>
                 <td>
                   <div class="flex gap-1">
-                    <div v-for="color of media.prominentColor" :key="color"
-                      class="w-4 h-4 rounded-1 ring-1 ring-gray/20" :style="{
-                        backgroundColor: `#${color}`
-                      }">
-                    </div>
+                    <div
+                      v-for="color of media.prominentColor" :key="color"
+                      class="h-4 w-4 rounded-1 ring-1 ring-gray/20" :style="{
+                        backgroundColor: `#${color}`,
+                      }"
+                    />
                   </div>
                 </td>
               </tr>
@@ -215,7 +224,6 @@ function handleLeave() {
   @apply ring-gray/20 ring-1 shadow-lg;
   @apply overflow-hidden relative;
   @apply w-[--image-size] h-[--image-size];
-
 
   &.tiny-mode {
     @apply w-auto h-[--image-size];
