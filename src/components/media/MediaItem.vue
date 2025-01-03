@@ -166,36 +166,38 @@ function handleLeave() {
         }" />
         <MediaMetaContainer v-if="!tinyMode" class="desc" v-model="currentActive">
           <table>
-            <tr>
-              <td>Title</td>
-              <td class="line-clamp-2">{{ media.title }}</td>
-            </tr>
-            <tr v-if="media.alt">
-              <td>Alt</td>
-              <td class="line-clamp-1">{{ media.alt }}</td>
-            </tr>
-            <tr>
-              <td>MIME</td>
-              <td>{{ media.mime }}</td>
-            </tr>
-            <tr>
-              <td>Size</td>
-              <td>Original {{ prettyBytes(media.extra.original) }}
-                <br />Thumbnail {{ prettyBytes(media.extra.thumbnail) }}
-              </td>
-            </tr>
-            <tr>
-              <td>Color</td>
-              <td>
-                <div class="flex gap-1">
-                  <div v-for="color of media.prominentColor" :key="color" class="w-4 h-4 rounded-1 ring-1 ring-gray/20"
-                    :style="{
-                      backgroundColor: `#${color}`
-                    }">
+            <tbody>
+              <tr>
+                <td>Title</td>
+                <td class="line-clamp-2">{{ media.title }}</td>
+              </tr>
+              <tr v-if="media.alt">
+                <td>Alt</td>
+                <td class="line-clamp-1">{{ media.alt }}</td>
+              </tr>
+              <tr>
+                <td>MIME</td>
+                <td>{{ media.mime }}</td>
+              </tr>
+              <tr>
+                <td>Size</td>
+                <td>Original {{ prettyBytes(media.extra.original) }}
+                  <br />Thumbnail {{ prettyBytes(media.extra.thumbnail) }}
+                </td>
+              </tr>
+              <tr>
+                <td>Color</td>
+                <td>
+                  <div class="flex gap-1">
+                    <div v-for="color of media.prominentColor" :key="color"
+                      class="w-4 h-4 rounded-1 ring-1 ring-gray/20" :style="{
+                        backgroundColor: `#${color}`
+                      }">
+                    </div>
                   </div>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </MediaMetaContainer>
       </div>
