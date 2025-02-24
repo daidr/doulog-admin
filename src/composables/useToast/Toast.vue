@@ -7,13 +7,16 @@ const props = defineProps<{
   info: ToastInfo
 }>()
 
-const emit = defineEmits(['close'])
+const emit = defineEmits<{
+  close: []
+}>()
 
 const DEFAULT_ICONS = {
   success: 'i-mingcute-check-circle-line',
   error: 'i-mingcute-close-circle-line',
   warning: 'i-mingcute-warning-line',
   info: 'i-mingcute-information-line',
+  loading: 'i-mingcute-loading-3-line',
 }
 
 let timer: number
@@ -52,9 +55,17 @@ onUnmounted(() => {
 <template>
   <div ref="ToastRef" class="toast" @mouseenter="paused = true" @mouseleave="paused = false">
     <div class="toast-icon">
-      <div v-if="info.icon" :class="[toValue(info.icon)]" />
-      <div v-else :class="DEFAULT_ICONS[info.type || 'info']" />
-      <div class="close-btn" @click="$emit('close')">
+      <div
+        v-if="info.icon" :class="[toValue(info.icon), {
+          'animate-spin': info.type === 'loading',
+        }]"
+      />
+      <div
+        v-else :class="[DEFAULT_ICONS[info.type || 'info'], {
+          'animate-spin': info.type === 'loading',
+        }]"
+      />
+      <div v-if="!info.hideClose" class="close-btn" @click="$emit('close')">
         <div class="i-mingcute-close-line text-base" />
       </div>
     </div>

@@ -6,6 +6,7 @@ interface BaseInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   min?: number
   wrapperClass?: any
   disabled?: boolean
+  label?: string
 }
 
 const props = defineProps<BaseInputProps>()
@@ -64,25 +65,36 @@ const LengthCheckComp = defineComponent(() => {
 </script>
 
 <template>
-  <div
-    class="base-input" :class="[wrapperClass, {
-      disabled: props.disabled,
-    }]"
-  >
-    <input v-bind="$attrs" v-model="model" :disabled="disabled">
-    <div class="h-0">
-      <div
-        v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
-          [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
-        }"
-      >
-        <LengthCheckComp />
+  <div class="wrapper">
+    <div v-if="label" class="label">
+      {{ label }}
+    </div>
+    <div
+      class="base-input" :class="[wrapperClass, {
+        disabled: props.disabled,
+      }]"
+    >
+      <input v-bind="$attrs" v-model="model" :disabled="disabled">
+      <div class="h-0">
+        <div
+          v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
+            [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
+          }"
+        >
+          <LengthCheckComp />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.label {
+  @apply text-gray-500;
+  @apply text-base;
+  @apply mb-1;
+}
+
 .base-input {
   @apply relative;
   @apply ring-1 ring-gray-200 rounded-xl;
@@ -104,6 +116,10 @@ const LengthCheckComp = defineComponent(() => {
     @apply w-full outline-0;
     @apply bg-white;
     @apply px-2 py-2;
+  }
+
+  input[type='color'] {
+    @apply p-0 mx-2 my-1 h-8;
   }
 
   .length-check {

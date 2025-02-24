@@ -5,10 +5,11 @@ export interface ToastInfo {
   _id: string
   _createdAt: number
   content: MaybeRefOrGetter<string | VNode>
-  type?: 'info' | 'success' | 'warning' | 'error'
+  type?: 'info' | 'success' | 'warning' | 'error' | 'loading'
   icon?: MaybeRefOrGetter<string>
   onClose?: () => void
   duration?: number | false
+  hideClose?: boolean
 }
 
 let toasts: Ref<ToastInfo[]> | undefined
@@ -70,10 +71,11 @@ function createToast(props: CreateToastProps) {
 }
 
 const toastSugar = {
-  info: (props: SugarToastProps) => createToast({ ...props, type: 'info' }),
-  success: (props: SugarToastProps) => createToast({ ...props, type: 'success' }),
-  warning: (props: SugarToastProps) => createToast({ ...props, type: 'warning' }),
-  error: (props: SugarToastProps) => createToast({ ...props, type: 'error' }),
+  info: (props: SugarToastProps) => createToast({ duration: 2000, ...props, type: 'info' }),
+  success: (props: SugarToastProps) => createToast({ duration: 2000, ...props, type: 'success' }),
+  warning: (props: SugarToastProps) => createToast({ duration: 2000, ...props, type: 'warning' }),
+  error: (props: SugarToastProps) => createToast({ duration: 2000, ...props, type: 'error' }),
+  loading: (props: SugarToastProps) => createToast({ ...props, type: 'loading', duration: false, hideClose: true }),
 }
 
 export function useToast() {

@@ -48,3 +48,26 @@ export async function getMediaList(props: {
     list: result.data.list,
   }
 }
+
+export async function uploadMedia(file: File): Promise<number | false> {
+  const formData = new FormData()
+  formData.append('media', file)
+
+  try {
+    const result = await instance.post('/api/x/media/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    const pid = result?.data?.pid
+
+    if (!pid) {
+      return false
+    }
+
+    return pid
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}

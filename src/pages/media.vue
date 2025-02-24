@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getMediaList, type MediaInfo } from '@/api/media'
+import { getMediaList, type MediaInfo, uploadMedia } from '@/api/media'
+import BaseButton from '@/components/base/BaseButton.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import MediaItem from '@/components/media/MediaItem.vue'
 
@@ -14,6 +15,8 @@ const keyword = ref('')
 function handleSearch() {
   keyword.value = searchValue.value
 }
+
+const { loading: tL, success: tS, error: tE } = useToast()
 
 const mediaList = shallowRef<MediaInfo[]>([])
 let currentInstance: number = 0
@@ -65,11 +68,57 @@ const isMobile = computed(() => {
 const imageSize = computed(() => {
   return isMobile.value ? Math.max((windowWidth.value) / 6, 60) : FULL_IMAGE_SIZE
 })
+
+function upload() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*'
+  input.multiple = true
+  const { close: end } = tL({ content: '等待选择媒体文件' })
+  input.onchange = async () => {
+    try {
+      end()
+      const files = input.files
+      if (!files || files.length === 0) {
+        tE({ content: '未选择文件' })
+        return
+      }
+
+      const { close: uploadEnd } = tL({ content: '上传中' })
+
+      const uploadPromises = Array.from(files).map(file => uploadMedia(file))
+      const responses = await Promise.all(uploadPromises)
+
+      uploadEnd()
+
+      if (responses.some(resp => !resp)) {
+        throw new Error('部分文件上传失败')
+      }
+
+      tS({ content: '上传成功' })
+    } catch (error) {
+      console.error(error)
+    } finally {
+      input.remove()
+      fetchData(1, size.value)
+    }
+  }
+
+  input.oncancel = () => {
+    end()
+    tE({ content: '取消上传' })
+    input.remove()
+  }
+  input.click()
+}
 </script>
 
 <template>
   <div class="min-h-100dvh flex flex-col p-1">
     <div class="page-header">
+      <BaseButton icon="i-mingcute-photo-album-2-line" @click="upload">
+        上传图片
+      </BaseButton>
       <BaseInput v-model="searchValue" placeholder="搜索图片" class="w-[min(400px,80vw)]" @keyup.enter="handleSearch" />
     </div>
     <div
@@ -88,12 +137,12 @@ const imageSize = computed(() => {
 
 <style scoped lang="scss">
 .page-header {
-  @apply flex justify-end;
+  @apply flex justify-end gap-2;
   @apply mb-2;
 }
 </style>
 
-<route lang="json">
+<route>
 {
   "meta": {
     "title": "媒体库"

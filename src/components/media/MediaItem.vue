@@ -89,7 +89,7 @@ watchEffect(() => {
   } else if (expanded.value) {
     sourceTimer = setTimeout(() => {
       imageSource.value = getURLFromId(props.media.id)
-    }, 400)
+    }, 1)
   } else {
     imageSource.value = getURLFromId(props.media.id, true)
   }
