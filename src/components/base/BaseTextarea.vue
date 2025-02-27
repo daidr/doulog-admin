@@ -6,6 +6,7 @@ interface BaseTextareaProps extends /* @vue-ignore */ TextareaHTMLAttributes {
   min?: number
   wrapperClass?: any
   disabled?: boolean
+  label?: string
 }
 
 const props = defineProps<BaseTextareaProps>()
@@ -64,25 +65,36 @@ const LengthCheckComp = defineComponent(() => {
 </script>
 
 <template>
-  <div
-    class="base-input" :class="[wrapperClass, {
-      disabled: props.disabled,
-    }]"
-  >
-    <textarea v-bind="$attrs" v-model="model" :disabled="disabled" />
-    <div class="absolute bottom-0 left-0 h-[calc(1.6em+0.5rem)]">
-      <div
-        v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
-          [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
-        }"
-      >
-        <LengthCheckComp />
+  <div class="wrapper">
+    <div v-if="label" class="label">
+      {{ label }}
+    </div>
+    <div
+      class="base-input" :class="[wrapperClass, {
+        disabled: props.disabled,
+      }]"
+    >
+      <textarea v-bind="$attrs" v-model="model" :disabled="disabled" />
+      <div class="absolute bottom-0 left-0 h-[calc(1.6em+0.5rem)]">
+        <div
+          v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
+            [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
+          }"
+        >
+          <LengthCheckComp />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.label {
+  @apply text-gray-500;
+  @apply text-base;
+  @apply mb-1;
+}
+
 .base-input {
   @apply relative;
   @apply ring-1 ring-gray-200 rounded-xl;
