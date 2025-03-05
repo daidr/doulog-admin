@@ -1,6 +1,6 @@
-# DouLog Admin (WIP)
+# DouLog Elysia Console (WIP)
 
-The brand-new dashboard frontend for DouLog (Golang-based backend).
+The brand-new dashboard frontend for DouLog (Elysia-based backend).
 
 ## Project Setup
 

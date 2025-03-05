@@ -32,14 +32,6 @@ const menu: Menu = [
     type: 'item',
   },
   {
-    label: '修改主页',
-    onClick: () => {
-      emit('updateHomepage')
-    },
-    icon: 'i-mingcute-link-line',
-    type: 'item',
-  },
-  {
     label: '修改座右铭',
     onClick: () => {
       emit('updateMotto')

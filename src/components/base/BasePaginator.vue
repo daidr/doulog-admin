@@ -14,7 +14,7 @@ export interface PaginatorProps {
 }
 const props = withDefaults(defineProps<PaginatorProps>(), {
   disabled: false,
-  pageSizes: () => [10, 20, 50, 100],
+  pageSizes: () => [5, 10, 20, 50],
   showSwitch: false,
   showSizer: false,
 })

@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { getTagList, type TagInfo } from '@/api/tag'
+import type { ElysiaResp } from '@/utils/elysia.util'
+import { app } from '@/api/elysia'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseEllipsisText from '@/components/base/BaseEllipsisText.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import BaseTable from '@/components/base/BaseTable.vue'
-import BaseTagBadge from '@/components/base/BaseTagBadge.vue'
 import TagPageEditMenu from '@/components/tag/TagPageEditMenu.vue'
 import { useUpdateTagModal } from '@/composables/modals/useUpdateTagModal'
 
 const tagTableColumns = computed(() => [{
-  label: '标签',
-  key: 'label',
+  label: '文章分类',
+  key: 'name',
   width: 'min(300px, 30vw)',
   fixed: true,
 }, {
@@ -22,8 +22,8 @@ const tagTableColumns = computed(() => [{
   key: 'slug',
   width: 250,
 }, {
-  label: '颜色',
-  key: 'color',
+  label: '文章数量',
+  key: 'count',
   width: 250,
 }, {
   label: '',
@@ -33,9 +33,6 @@ const tagTableColumns = computed(() => [{
 }])
 
 const loading = ref(true)
-const total = ref(0)
-const page = ref(1)
-const size = ref(20)
 const keyword = ref('')
 
 const searchValue = ref('')
@@ -44,28 +41,22 @@ function handleSearch() {
   keyword.value = searchValue.value
 }
 
-const tagList = shallowRef<TagInfo[]>([])
+export type CategoryResp = ElysiaResp<typeof app.api.category.index.get>
+
+const tagList = shallowRef<CategoryResp>([])
 let currentInstance: number = 0
 
-async function fetchData(_page: number, _size: number) {
+async function fetchData() {
   const _instance = currentInstance = Math.random()
   try {
     loading.value = true
-    const result = await getTagList({
-      keyword: keyword.value,
-      page: _page,
-      size: _size,
-    })
+    const { data } = await app.api.category.index.get()
 
     if (_instance !== currentInstance) return
 
-    if (!result) return
+    if (!data) return
 
-    tagList.value = result.list
-
-    total.value = result.total
-    page.value = _page
-    size.value = _size
+    tagList.value = data
   } finally {
     if (_instance === currentInstance) {
       loading.value = false
@@ -74,43 +65,16 @@ async function fetchData(_page: number, _size: number) {
 }
 
 watch(keyword, () => {
-  fetchData(1, size.value)
+  fetchData()
 }, { immediate: true })
 
 async function refresh() {
-  await fetchData(page.value, size.value)
-}
-
-function randomMaterialColor() {
-  const colors = [
-    '#f44336',
-    '#e91e63',
-    '#9c27b0',
-    '#673ab7',
-    '#3f51b5',
-    '#2196f3',
-    '#03a9f4',
-    '#00bcd4',
-    '#009688',
-    '#4caf50',
-    '#8bc34a',
-    '#cddc39',
-    '#ffeb3b',
-    '#ffc107',
-    '#ff9800',
-    '#ff5722',
-    '#795548',
-    '#9e9e9e',
-    '#607d8b',
-  ]
-
-  return colors[Math.floor(Math.random() * colors.length)]
+  await fetchData()
 }
 
 async function addTag() {
   useUpdateTagModal({
-    label: '',
-    color: randomMaterialColor(),
+    name: '',
     slug: '',
   }, refresh)
 }
@@ -120,29 +84,22 @@ async function addTag() {
   <div class="h-100dvh flex flex-col p-1">
     <div class="page-header">
       <BaseButton icon="i-mingcute-tag-line" @click="addTag">
-        新增tag
+        新增分类
       </BaseButton>
-      <BaseInput v-model="searchValue" placeholder="搜索tag" class="w-[min(400px,80vw)]" @keyup.enter="handleSearch" />
+      <BaseInput v-model="searchValue" placeholder="搜索分类名称/slug" class="w-[min(400px,80vw)]" @keyup.enter="handleSearch" />
     </div>
     <BaseTable
-      :columns="tagTableColumns" :data="tagList" row-key="id" scroll-height="calc(100dvh - 45px - 48px - 48px)"
+      :columns="tagTableColumns" :data="tagList" row-key="_id" scroll-height="calc(100dvh - 45px - 48px - 48px)"
       scroll-width="max(2500px, 100vw)" table-class="ring-1 rounded-3 ring-gray-300 overflow-hidden"
-      paginator-class="pt-2" :paginator="{
-        current: page,
-        total,
-        size,
-        disabled: loading,
-        showSwitch: false,
-      }" @page-change="(page) => fetchData(page, size)" @size-change="(size) => fetchData(1, size)"
     >
-      <template #column-label="{ item }">
-        <BaseTagBadge :label="item.label" :color="item.color" />
+      <template #column-name="{ item }">
+        <BaseEllipsisText>{{ item.name }}</BaseEllipsisText>
       </template>
       <template #column-slug="{ item }">
         <BaseEllipsisText>{{ item.slug }}</BaseEllipsisText>
       </template>
-      <template #column-color="{ item }">
-        <BaseEllipsisText>{{ item.color }}</BaseEllipsisText>
+      <template #column-count="{ item }">
+        <BaseEllipsisText>{{ item.count }}</BaseEllipsisText>
       </template>
       <template #column-_action="{ item }">
         <div class="flex justify-center">
@@ -163,7 +120,7 @@ async function addTag() {
 <route lang="json">
 {
   "meta": {
-    "title": "标签"
+    "title": "文章分类"
   }
 }
 </route>

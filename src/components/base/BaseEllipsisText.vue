@@ -27,7 +27,7 @@ function handleTryClose() {
     </template>
 
     <template #content>
-      <div class="w-max p-2">
+      <div class="w-max px-2 py-1 text-sm">
         <slot />
       </div>
     </template>

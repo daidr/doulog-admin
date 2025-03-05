@@ -1,22 +1,27 @@
-import { getSelfUserInfo, type UserInfoWithLogged } from '@/api/user'
+import { app } from '@/api/elysia'
 import { STORAGE_TOKEN } from '@/constants/base'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+
+type UserInfo = (Awaited<ReturnType<typeof app.api.auth.check.get>>['data'] & { isLogged: true }) | { isLogged: false }
 
 export const useUserStore = defineStore('user', () => {
   const isFetching = ref(false)
-  const userInfo = shallowRef<UserInfoWithLogged>({
+  const userInfo = ref<UserInfo>({
     isLogged: false,
   })
 
   const fetchUserInfo = async () => {
     isFetching.value = true
-    try {
-      const result = await getSelfUserInfo()
-      userInfo.value = result
-    } finally {
-      isFetching.value = false
+    const result = await app.api.auth.check.get()
+    if (result.error || !result.data) {
+      userInfo.value = { isLogged: false }
+    } else {
+      userInfo.value = {
+        ...result.data,
+        isLogged: true,
+      }
     }
+    isFetching.value = false
   }
 
   const token = useLocalStorage(STORAGE_TOKEN, '')

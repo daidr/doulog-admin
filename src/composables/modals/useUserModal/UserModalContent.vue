@@ -26,38 +26,28 @@ function formatTime(time: number) {
             <table>
               <tbody>
                 <tr>
-                  <td>ID</td>
-                  <td>{{ userInfo.id }}</td>
+                  <td>名字</td>
+                  <td>{{ userInfo.name }}</td>
                 </tr>
                 <tr>
-                  <td>用户名</td>
-                  <td>{{ userInfo.name }}</td>
+                  <td>昵称</td>
+                  <td>{{ userInfo.nickname }}</td>
                 </tr>
                 <tr>
                   <td>邮箱</td>
                   <td>{{ userInfo.email }}</td>
                 </tr>
                 <tr>
-                  <td>个人主页</td>
-                  <td>{{ userInfo.homepage }}</td>
-                </tr>
-                <tr>
-                  <td>创建时间</td>
-                  <td>{{ formatTime(userInfo.createdAt) }}</td>
-                </tr>
-                <tr>
-                  <td>角色权限</td>
-                  <td>
-                    <UserRoleCell :user="userInfo" size="small" />
-                  </td>
+                  <td>座右铭</td>
+                  <td>{{ userInfo.motto }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      <div class="cursor-text" @click="useChangeMottoModal(userInfo, userStore.fetchUserInfo)">
-        <BaseTextarea placeholder="这个人什么都没有留下～" disabled :model-value="userInfo.motto" />
+      <div>
+        <BaseTextarea placeholder="这个人什么都没有留下～" disabled :model-value="userInfo.bio" />
       </div>
     </div>
   </div>

@@ -1,5 +1,4 @@
 import { useChangeEmailModal } from '../useChangeEmailModal'
-import { useChangeHomepageModal } from '../useChangeHomepageModal'
 import { useChangeMottoModal } from '../useChangeMottoModal'
 import { useChangeNameModal } from '../useChangeNameModal'
 import { useCheckPasskeysModal } from '../useCheckPasskeysModal'
@@ -38,13 +37,6 @@ export function useUserModal() {
         onUpdateEmail: () => {
           if (userInfo.value.isLogged) {
             useChangeEmailModal(userInfo.value, async () => {
-              await fetchUserInfo()
-            })
-          }
-        },
-        onUpdateHomepage: () => {
-          if (userInfo.value.isLogged) {
-            useChangeHomepageModal(userInfo.value, async () => {
               await fetchUserInfo()
             })
           }

@@ -19,6 +19,7 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/categories': RouteRecordInfo<'/categories', '/categories', Record<never, never>, Record<never, never>>,
     '/comments/manage': RouteRecordInfo<'/comments/manage', '/comments/manage', Record<never, never>, Record<never, never>>,
     '/comments/review': RouteRecordInfo<'/comments/review', '/comments/review', Record<never, never>, Record<never, never>>,
     '/dashboard': RouteRecordInfo<'/dashboard', '/dashboard', Record<never, never>, Record<never, never>>,
@@ -26,12 +27,15 @@ declare module 'vue-router/auto-routes' {
     '/friends/review': RouteRecordInfo<'/friends/review', '/friends/review', Record<never, never>, Record<never, never>>,
     '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
     '/media': RouteRecordInfo<'/media', '/media', Record<never, never>, Record<never, never>>,
+    '/notes': RouteRecordInfo<'/notes', '/notes', Record<never, never>, Record<never, never>>,
+    '/pages': RouteRecordInfo<'/pages', '/pages', Record<never, never>, Record<never, never>>,
+    '/post/': RouteRecordInfo<'/post/', '/post', Record<never, never>, Record<never, never>>,
     '/post/[id]': RouteRecordInfo<'/post/[id]', '/post/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
     '/posts': RouteRecordInfo<'/posts', '/posts', Record<never, never>, Record<never, never>>,
     '/projects/categories': RouteRecordInfo<'/projects/categories', '/projects/categories', Record<never, never>, Record<never, never>>,
     '/projects/manage': RouteRecordInfo<'/projects/manage', '/projects/manage', Record<never, never>, Record<never, never>>,
+    '/system/alert': RouteRecordInfo<'/system/alert', '/system/alert', Record<never, never>, Record<never, never>>,
     '/system/settings': RouteRecordInfo<'/system/settings', '/system/settings', Record<never, never>, Record<never, never>>,
     '/system/users': RouteRecordInfo<'/system/users', '/system/users', Record<never, never>, Record<never, never>>,
-    '/tags': RouteRecordInfo<'/tags', '/tags', Record<never, never>, Record<never, never>>,
   }
 }

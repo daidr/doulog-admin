@@ -21,7 +21,7 @@ const showEndMask = computed(() => {
 
 <template>
   <div
-    v-if="userInfo.isLogged && userInfo.isAdmin" ref="NavLinksRef" class="main-nav-links max-h-[calc(100%-100px)] flex-grow overflow-y-scroll" :class="{
+    v-if="userInfo.isLogged" ref="NavLinksRef" class="main-nav-links max-h-[calc(100%-100px)] flex-grow overflow-y-scroll" :class="{
       'start-mask': showStartMask,
       'end-mask': showEndMask,
     }"

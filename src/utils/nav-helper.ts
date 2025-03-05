@@ -17,7 +17,7 @@ export type NavCategory = {
 export interface NavItem {
   name: string
   locale_key: string
-  to: typeof RouterLinkProps['to']
+  to: RouterLinkProps['to']
   icon: string
 }
 
@@ -42,7 +42,7 @@ export function createNavCategory(name: string, locale_key: string): NavCategory
   }
 }
 
-export function createNavItem(name: string, locale_key: string, to: typeof RouterLinkProps['to'], icon: string) {
+export function createNavItem(name: string, locale_key: string, to: RouterLinkProps['to'], icon: string) {
   return { name, locale_key, to, icon }
 }
 

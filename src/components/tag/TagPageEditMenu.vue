@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import type { TagInfo } from '@/api/tag'
+import type { CategoryResp } from '@/pages/categories.vue'
+import { app } from '@/api/elysia'
 import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue'
 import { useUpdateTagModal } from '@/composables/modals/useUpdateTagModal'
 
 const props = defineProps<{
-  tag: TagInfo
+  tag: Pick<CategoryResp[number], '_id' | 'name' | 'slug'>
   refresh: () => void | Promise<void>
 }>()
 
 const menu = computed<Menu>(() =>
   [
     {
-      label: '编辑标签',
+      label: '编辑分类',
       onClick: () => {
         useUpdateTagModal(props.tag, props.refresh)
       },
@@ -19,8 +20,12 @@ const menu = computed<Menu>(() =>
       type: 'item',
     },
     {
-      label: '删除',
-      onClick: () => {
+      label: '删除分类',
+      onClick: async () => {
+        await app.api.category({
+          id: props.tag._id.toString(),
+        }).delete()
+        await props.refresh()
       },
       class: 'text-red-700',
       icon: 'i-mingcute-delete-line',

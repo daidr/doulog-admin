@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = withDefaults(defineProps<{
+export type BasePopoverProps = {
   position?: 'top' | 'top-left' | 'top-right' | 'bottom' | 'bottom-left' | 'bottom-right' | 'left' | 'left-top' | 'left-bottom' | 'right' | 'right-top' | 'right-bottom'
   gap?: number
   trigger?: 'click' | 'hover' | 'manual'
-}>(), {
+}
+
+const props = withDefaults(defineProps<BasePopoverProps>(), {
   position: 'left-top',
   gap: 10,
   trigger: 'click',
@@ -158,7 +160,7 @@ function handleSlotClick() {
   }
 }
 
-let hoverCloseTimer: number
+let hoverCloseTimer: Timer
 
 onUnmounted(() => {
   clearTimeout(hoverCloseTimer)
@@ -183,7 +185,7 @@ useEventListener(SlotRef, 'mouseleave', () => {
       } else {
         emit('tryClose')
       }
-    }, 200)
+    }, 50)
   }
 })
 
@@ -201,7 +203,7 @@ useEventListener(PopoverRef, 'mouseleave', () => {
       } else {
         emit('tryClose')
       }
-    }, 200)
+    }, 50)
   }
 })
 </script>

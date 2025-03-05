@@ -2,7 +2,6 @@
 import type { UserInfo } from '@/api/user'
 import BaseMenu, { type Menu } from '@/components/base/BaseMenu.vue'
 import { useChangeEmailModal } from '@/composables/modals/useChangeEmailModal'
-import { useChangeHomepageModal } from '@/composables/modals/useChangeHomepageModal'
 import { useChangeMottoModal } from '@/composables/modals/useChangeMottoModal'
 import { useChangeNameModal } from '@/composables/modals/useChangeNameModal'
 
@@ -30,14 +29,6 @@ const menu = computed<Menu>(() =>
       type: 'item',
     },
     {
-      label: '修改主页',
-      onClick: () => {
-        useChangeHomepageModal(props.user, props.refresh)
-      },
-      icon: 'i-mingcute-link-line',
-      type: 'item',
-    },
-    {
       label: '修改座右铭',
       onClick: () => {
         useChangeMottoModal(props.user, props.refresh)
@@ -45,20 +36,16 @@ const menu = computed<Menu>(() =>
       icon: 'i-mingcute-textbox-line',
       type: 'item',
     },
-    ...(props.user.isAdmin
-      ? []
-      : [
-        {
-          type: 'separator',
-        },
-        {
-          label: props.user.isBanned ? '解除封禁' : '封禁',
-          onClick: () => { },
-          class: 'text-red-700',
-          icon: 'i-mingcute-forbid-circle-line',
-          type: 'item',
-        },
-      ] satisfies Menu),
+    {
+      type: 'separator',
+    },
+    {
+      label: props.user.isBanned ? '解除封禁' : '封禁',
+      onClick: () => { },
+      class: 'text-red-700',
+      icon: 'i-mingcute-forbid-circle-line',
+      type: 'item',
+    },
   ])
 </script>
 

@@ -1,5 +1,4 @@
 import { useToast } from '@/composables/useToast'
-import { STORAGE_TOKEN } from '@/constants/base'
 import axios from 'axios'
 import { API_BASE } from './env'
 
@@ -8,52 +7,46 @@ export const instance = axios.create({
   timeout: 10000,
 })
 
-instance.interceptors.request.use((config) => {
-  config.headers.authorization = `Bearer ${localStorage.getItem(STORAGE_TOKEN)}`
-  return config
-})
-
 const { error } = useToast()
 
 instance.interceptors.response.use(
   (resp) => {
-    switch (resp.data.code) {
-      case 0:
-        // success
-        return resp.data
-      case -2:
-        // invalid parameters
-        error({ content: '参数不合法', duration: 2000 })
-        break
-      case 101003:
-        // email not found
-        error({ content: '邮箱不存在', duration: 2000 })
-        break
-      case 101004:
-        // password incorrect
-        error({ content: '密码错误', duration: 2000 })
-        break
-      case 101005:
-        // Failed to create webauthn challenge
-        error({ content: '创建挑战出现错误', duration: 2000 })
-        break
-      case 101006:
-        // Failed to finish webauthn verification
-        error({ content: '凭证挑战验证失败', duration: 2000 })
-        break
-      case 101007:
-        // Credential not found
-        error({ content: '凭证不存在', duration: 2000 })
-        break
-      default:
-        // error
-        console.log('Api error: ', resp.data.msg, resp)
-        error({ content: resp.data.msg, duration: 2000 })
-    }
+    return resp
+    // switch (resp.status) {
+    //   case 200:
+    //     // success
+
+    //   default:
+    //     if (resp.data?.msg) {
+    //       // error
+    //       console.log('Api error: ', resp.data.msg, resp)
+    //       error({ content: resp.data.msg, duration: 2000 })
+    //       return null
+    //     }
+    //     // error
+    //     console.log('Unknown Api error: ', resp.data, resp)
+    //     error({ content: '未知错误', duration: 2000 })
+    // }
   },
   (err) => {
+    switch (err.response?.status) {
+      case 404:
+        error({ content: 'API not found', duration: 2000 })
+        return err.response
+
+      case 500:
+        error({ content: 'Internal server error', duration: 2000 })
+        return err.response
+    }
+
+    if (err.response?.data?.msg) {
+      console.log('Api error: ', err.response.data.msg, err)
+      error({ content: err.response.data.msg, duration: 2000 })
+      return err.response
+    }
+
     console.log('Unexpected api error: ', err.response, err)
     error({ content: '网络错误', duration: 2000 })
-    return false
+    return err.response
   },
 )

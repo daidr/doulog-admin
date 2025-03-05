@@ -66,7 +66,7 @@ const route = useRoute()
             <img src="@/assets/images/logo-head.png" class="h-11 w-11">
             <template #extra>
               <p class="text-base font-bold">
-                DouLog 管理面板
+                DouLog Console
               </p>
               <p class="text-xs">
                 {{ route.meta.title }}

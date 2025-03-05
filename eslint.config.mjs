@@ -36,6 +36,9 @@ export default antfu(
       'unused-imports/no-unused-vars': 'warn',
 
       'style/brace-style': ['error', '1tbs'],
+
+      // 禁止unocss排序
+      'unocss/order': 'off',
     },
   },
 )

@@ -1,9 +1,9 @@
 <script setup lang="ts">
+import { app } from '@/api/elysia'
 import { getWebAuthnDiscoverLoginOptions, pwLogin, webauthnLogin } from '@/api/login'
 import BaseButton from '@/components/base/BaseButton.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
 import { parseRequestOptionsFromJSON } from '@github/webauthn-json/browser-ponyfill'
-import { useRegisterModal } from '../useRegisterModal'
 
 const userStore = useUserStore()
 const { userInfo } = storeToRefs(userStore)
@@ -36,21 +36,17 @@ function handleQQLogin() {
 function handleTestLogin() {
 }
 
-const formEmail = ref('')
 const formPassword = ref('')
 function isEmptyString(str: string) {
   return str.trim() === ''
 }
-function isInvalidEmail(email: string) {
-  return !/^[\w.%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)
-}
-const disabledPwButton = computed(() => (loginProcessing.value !== '' && loginProcessing.value !== 'password') || isEmptyString(formEmail.value) || isEmptyString(formPassword.value) || isInvalidEmail(formEmail.value))
+const disabledPwButton = computed(() => (loginProcessing.value !== '' && loginProcessing.value !== 'password') || isEmptyString(formPassword.value))
 
 async function loginWithPassword() {
   loginProcessing.value = 'password'
-  const result = await pwLogin(formEmail.value, formPassword.value)
-  if (result) {
-    userStore.setToken(result)
+  const result = await app.api.auth.password.post({ password: formPassword.value })
+  if (result.data?.token) {
+    userStore.setToken(result.data.token)
   } else {
     loginProcessing.value = ''
   }
@@ -114,36 +110,28 @@ onUnmounted(() => {
   <DefinePlatformButtonTemplate v-slot="{ platform, clickHandler, icon, $slots }">
     <BaseButton
       :loading="loginProcessing === platform" :ghost="true" :small="true"
-      :disabled="loginProcessing !== '' && loginProcessing !== platform" :icon="icon" @click="runLoginHandler(platform, clickHandler)"
+      :disabled="loginProcessing !== '' && loginProcessing !== platform" :icon="icon"
+      @click="runLoginHandler(platform, clickHandler)"
     >
       <component :is="$slots.default" />
     </BaseButton>
   </DefinePlatformButtonTemplate>
   <div class="flex flex-col gap-2">
     <BaseInput
-      v-model="formEmail" type="email" placeholder="邮箱" autocomplete="username webauthn"
-      :disabled="loginProcessing !== ''"
-    />
-    <BaseInput
       v-model="formPassword" type="password" placeholder="密码" autocomplete="current-password"
       :disabled="loginProcessing !== ''"
+      @keypress.enter="loginWithPassword"
     />
-    <BaseButton
-      :loading="loginProcessing === 'password'" :disabled="disabledPwButton"
-      @click="loginWithPassword"
-    >
+    <BaseButton :loading="loginProcessing === 'password'" :disabled="disabledPwButton" @click="loginWithPassword">
       登录
     </BaseButton>
-    <div class="flex justify-between">
+    <div class="flex justify-end">
       <ReusePlatformButton platform="passkey" :click-handler="handlePasskeyLogin" icon="i-mingcute-key-2-fill">
         使用 passkey 登录
       </ReusePlatformButton>
-      <BaseButton :ghost="true" :small="true" @click="useRegisterModal">
-        创建账号
-      </BaseButton>
     </div>
-    <hr>
-    <div class="flex flex-wrap justify-center gap-1">
+    <hr class="hidden!">
+    <div class="flex flex-wrap justify-center gap-1 hidden!">
       <ReusePlatformButton platform="github" :click-handler="handleGitHubLogin" icon="i-mingcute-github-fill">
         GitHub
       </ReusePlatformButton>

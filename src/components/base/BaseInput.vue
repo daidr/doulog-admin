@@ -4,6 +4,7 @@ import type { InputHTMLAttributes } from 'vue'
 interface BaseInputProps extends /* @vue-ignore */ InputHTMLAttributes {
   max?: number
   min?: number
+  pattern?: string
   wrapperClass?: any
   disabled?: boolean
   label?: string
@@ -14,6 +15,13 @@ const props = defineProps<BaseInputProps>()
 const model = defineModel<string>({ default: '' })
 const modelValid = defineModel<boolean>('valid', { default: true })
 
+const compiledPattern = computed(() => {
+  if (props.pattern) {
+    return new RegExp(props.pattern)
+  }
+  return null
+})
+
 watch(() => model.value, () => {
   let temp = true
   if (typeof props.max === 'number') {
@@ -22,6 +30,10 @@ watch(() => model.value, () => {
 
   if (typeof props.min === 'number') {
     temp = temp && model.value.length >= props.min
+  }
+
+  if (compiledPattern.value) {
+    temp = temp && compiledPattern.value.test(model.value);
   }
 
   modelValid.value = temp
@@ -34,7 +46,8 @@ const LengthTextComp = defineComponent(textProps => () => h('div', {
     'error': textProps.isError,
     'length-check-text': true,
   },
-}, textProps.text), {
+  title: textProps.text,
+}, textProps.text.split('\n')[0]), {
   props: {
     isError: Boolean,
     text: String,
@@ -51,7 +64,17 @@ const LengthCheckComp = defineComponent(() => {
 
     if (typeof props.min === 'number') {
       const error = model.value.length < props.min
-      const node = h(LengthTextComp, { isError: error, text: `min: ${props.min}` })
+      const node = h(LengthTextComp, { isError: error, text: `至少 ${props.min} 位` })
+      if (error) {
+        nodes.unshift(node)
+      } else {
+        nodes.push(node)
+      }
+    }
+
+    if (compiledPattern.value) {
+      const error = !compiledPattern.value.test(model.value);
+      const node = h(LengthTextComp, { isError: error, text: `正则限制\n${props.pattern}` })
       if (error) {
         nodes.unshift(node)
       } else {
@@ -69,18 +92,14 @@ const LengthCheckComp = defineComponent(() => {
     <div v-if="label" class="label">
       {{ label }}
     </div>
-    <div
-      class="base-input" :class="[wrapperClass, {
-        disabled: props.disabled,
-      }]"
-    >
+    <div class="base-input" :class="[wrapperClass, {
+      disabled: props.disabled,
+    }]">
       <input v-bind="$attrs" v-model="model" :disabled="disabled">
       <div class="h-0">
-        <div
-          v-if="typeof max === 'number' || typeof min === 'number'" class="length-check" :class="{
-            [`height-level-${[typeof max === 'number', typeof min === 'number'].filter(Boolean).length}`]: true,
-          }"
-        >
+        <div v-if="typeof max === 'number' || typeof min === 'number' || props.pattern" class="length-check" :class="{
+          [`height-level-${[typeof max === 'number', typeof min === 'number', typeof props.pattern === 'string'].filter(Boolean).length}`]: true,
+        }">
           <LengthCheckComp />
         </div>
       </div>
@@ -100,7 +119,6 @@ const LengthCheckComp = defineComponent(() => {
   @apply ring-1 ring-gray-200 rounded-xl;
   @apply flex items-center;
   @apply bg-white;
-  @apply shadow-xl shadow-black/2;
 
   &.disabled {
     @apply pointer-events-none;
@@ -109,6 +127,7 @@ const LengthCheckComp = defineComponent(() => {
 
   &:focus-within {
     @apply ring-gray-300;
+    @apply shadow-xl shadow-black/2;
   }
 
   input {
@@ -123,7 +142,7 @@ const LengthCheckComp = defineComponent(() => {
   }
 
   .length-check {
-    @apply text-gray-400 bg-white text-center whitespace-nowrap z-2 relative;
+    @apply text-gray-400 bg-white text-center whitespace-nowrap z-2 relative transform-origin-r;
     @apply rounded-xl;
     @apply transform-gpu transition duration-300 -translate-y-1/2;
     transition-property: height, box-shadow, transform;
@@ -137,15 +156,19 @@ const LengthCheckComp = defineComponent(() => {
       --total-height: calc(3.2em + 0.5rem);
     }
 
+    &.height-level-3 {
+      --total-height: calc(4.8em + 0.5rem);
+    }
+
     :deep(.error) {
-      @apply text-red-600;
+      @apply text-red-600 text-ellipsis min-w-0 overflow-hidden;
     }
 
     @apply h-[calc(1.6em+0.5rem)] overflow-hidden;
     @apply py-1 px-2 flex-shrink-0;
 
     &:hover {
-      @apply shadow-xl scale-150 ring-1 ring-gray-200;
+      @apply shadow-lg scale-150 ring-1 ring-gray-200;
       @apply h-[var(--total-height)];
     }
   }

@@ -1,8 +1,9 @@
-import { createTag, type TagInfo, updateTag } from '@/api/tag'
+import type { CategoryResp } from '@/pages/categories.vue'
+import { app } from '@/api/elysia'
 import { useToast } from '@/composables/useToast'
 import UpdateTagModalContent from './UpdateTagModalContent.vue'
 
-export function useUpdateTagModal(tag: TagInfo | Omit<TagInfo, 'id'>, successCb?: () => void | Promise<void>) {
+export function useUpdateTagModal(tag: Pick<CategoryResp[number], '_id' | 'name' | 'slug'> | Pick<CategoryResp[number], 'name' | 'slug'>, successCb?: () => void | Promise<void>) {
   const loading = ref(false)
   const valid = ref(true)
   const innerTag = ref(tag)
@@ -11,20 +12,24 @@ export function useUpdateTagModal(tag: TagInfo | Omit<TagInfo, 'id'>, successCb?
   const handleConfirm = async (closeModal: () => void) => {
     loading.value = true
     try {
-      if ('id' in tag) {
-        if (await updateTag(tag.id, innerTag.value)) {
+      if ('_id' in innerTag.value) {
+        const { data } = await app.api.category({
+          id: innerTag.value._id.toString(),
+        }).patch(innerTag.value as any)
+        if (data) {
           await successCb?.()
           success({
-            content: '标签修改成功',
+            content: '文章分类修改成功',
             duration: 2000,
           })
           closeModal()
         }
       } else {
-        if (await createTag(innerTag.value)) {
+        const { data } = await app.api.category.index.post(innerTag.value)
+        if (data) {
           await successCb?.()
           success({
-            content: '标签创建成功',
+            content: '文章分类创建成功',
             duration: 2000,
           })
           closeModal()
@@ -36,7 +41,7 @@ export function useUpdateTagModal(tag: TagInfo | Omit<TagInfo, 'id'>, successCb?
   }
 
   const modal = useModal({
-    title: computed(() => 'id' in innerTag.value ? '修改标签' : '创建标签'),
+    title: computed(() => 'id' in innerTag.value ? '修改文章分类' : '创建文章分类'),
     icon: 'i-mingcute-tag-line',
     content: () => h(UpdateTagModalContent, {
       tag: innerTag.value,

@@ -22,7 +22,7 @@ onMounted(() => {
   <div class="h-100dvh w-full flex flex-col items-center justify-center gap-2 text-gray-600">
     <VectorLogo class="mx-auto h-32 w-32" />
     <p class="text-xl font-bold">
-      DouLog Admin
+      DouLog Elysia Console
     </p>
     <br>
     <template v-if="route.query.msg">

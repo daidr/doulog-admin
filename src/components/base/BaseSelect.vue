@@ -18,6 +18,7 @@ interface BaseSelectProps extends /* @vue-ignore */ SelectHTMLAttributes {
   disabled?: boolean
   options: (BaseSelectOptionItem | BaseSelectOptionGroup)[]
   size?: 'small' | 'medium' | 'large'
+  label?: string
 }
 
 withDefaults(defineProps<BaseSelectProps>(), {
@@ -29,28 +30,40 @@ const value = defineModel<string | number>()
 </script>
 
 <template>
-  <div
-    class="base-select" :class="[
-      `size-${size}`,
-      { disabled },
-    ]"
-  >
-    <select v-model="value">
-      <template v-for="option of options" :key="option.label">
-        <optgroup v-if="('options' in option)" :label="option.label" :disabled="option.disabled">
-          <option v-for="item of option.options" :key="item.value" :value="item.value" :disabled="item.disabled">
-            {{ item.label }}
+  <div class="wrapper">
+    <div v-if="label" class="label">
+      {{ label }}
+    </div>
+
+    <div
+      class="base-select" :class="[
+        `size-${size}`,
+        { disabled },
+      ]"
+    >
+      <select v-model="value">
+        <template v-for="option of options" :key="option.label">
+          <optgroup v-if="('options' in option)" :label="option.label" :disabled="option.disabled">
+            <option v-for="item of option.options" :key="item.value" :value="item.value" :disabled="item.disabled">
+              {{ item.label }}
+            </option>
+          </optgroup>
+          <option v-else :value="option.value" :disabled="option.disabled">
+            {{ option.label }}
           </option>
-        </optgroup>
-        <option v-else :value="option.value" :disabled="option.disabled">
-          {{ option.label }}
-        </option>
-      </template>
-    </select>
+        </template>
+      </select>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.label {
+  @apply text-gray-500;
+  @apply text-base;
+  @apply mb-1;
+}
+
 .base-select {
   @apply relative;
   @apply ring-1 ring-gray-200;
