@@ -11,9 +11,9 @@ import { useUpdateTagModal } from '@/composables/modals/useUpdateTagModal'
 
 const tagTableColumns = computed(() => [
   {
-    label: '文章标题',
+    label: '文章',
     key: 'title',
-    width: 'min(300px, 30vw)',
+    width: 'min(400px, 40vw)',
     fixed: true,
   },
   {
@@ -24,7 +24,7 @@ const tagTableColumns = computed(() => [
   {
     label: 'Slug',
     key: 'slug',
-    width: 250,
+    width: 200,
   },
   {
     label: '分类',
@@ -132,7 +132,26 @@ const paginator = computed(() => ({
       @page-change="(page) => fetchData(size, page)" @size-change="(size) => fetchData(size, 1)"
     >
       <template #column-title="{ item }">
-        <BaseEllipsisText>{{ item.title }}</BaseEllipsisText>
+        <div class="flex flex-col">
+          <BaseEllipsisText>{{ item.title }}</BaseEllipsisText>
+          <div class="flex gap-2 text-sm opacity-70 text-blue-700">
+            <div class="flex items-center gap-1">
+              <div class="i-mingcute-comment-fill" />
+              <div>{{ item.commentsCount }}</div>
+            </div>
+            <div class="flex items-center gap-1 text-green-700">
+              <div class="i-mingcute-eye-2-fill" />
+              <div>{{ item.count.read }}</div>
+            </div>
+            <div class="flex items-center gap-1 text-pink-700">
+              <div class="i-mingcute-love-fill" />
+              <div>{{ item.count.like }}</div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template #column-_id="{ item }">
+        <BaseEllipsisText>{{ item._id }}</BaseEllipsisText>
       </template>
       <template #column-slug="{ item }">
         <BaseEllipsisText>{{ item.slug }}</BaseEllipsisText>
