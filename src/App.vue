@@ -20,7 +20,7 @@ onErrorCaptured((err) => {
 function resetError() {
   error.value = null
 }
-router.beforeEach(() => {
+router.afterEach(() => {
   resetError()
 })
 function goToHomepage() {
@@ -34,9 +34,11 @@ function goToHomepage() {
   <div v-if="!route.meta.hideNav" class="fixed bottom-0 left-0 top-0 z-10">
     <MainNav />
   </div>
-  <div class="min-h-100dvh" :class="{
-    'sm:pl-18': !route.meta.hideNav,
-  }">
+  <div
+    class="min-h-100dvh" :class="{
+      'sm:pl-18': !route.meta.hideNav,
+    }"
+  >
     <template v-if="error">
       <div class="relative h-100dvh w-full flex flex-col items-center justify-center gap-2 text-gray-600">
         <div class="i-mingcute-alert-diamond-fill text-4xl text-red-800" />
@@ -48,7 +50,8 @@ function goToHomepage() {
           返回首页
         </BaseButton>
         <pre
-          class="absolute bottom-40px max-w-[min(90vw,400px)] whitespace-pre-wrap break-all rounded-xl bg-gray-50 p-2 text-sm">{{ error.stack }}</pre>
+          class="absolute bottom-40px max-w-[min(90vw,400px)] whitespace-pre-wrap break-all rounded-xl bg-gray-50 p-2 text-sm max-h-[calc(50dvh-40px-70px)] overflow-y-auto"
+        >{{ error.stack }}</pre>
       </div>
     </template>
     <template v-else>

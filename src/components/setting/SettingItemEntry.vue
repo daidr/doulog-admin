@@ -1,11 +1,11 @@
 <script setup lang="ts" generic="Item extends SettingItem">
 import type { SettingItem } from '@/types/api'
+import { app } from '@/api/elysia'
+import BaseButton from '../base/BaseButton.vue'
+import BaseInput from '../base/BaseInput.vue'
 import BasePopover from '../base/BasePopover.vue'
-import BaseInput from '../base/BaseInput.vue';
-import BaseTextarea from '../base/BaseTextarea.vue';
-import BaseButton from '../base/BaseButton.vue';
-import BaseTooltip from '../base/BaseTooltip.vue';
-import { app } from '@/api/elysia';
+import BaseTextarea from '../base/BaseTextarea.vue'
+import BaseTooltip from '../base/BaseTooltip.vue'
 
 const props = defineProps<{
   setting: Item
@@ -53,7 +53,7 @@ async function saveValue() {
     success({ content: '保存成功' })
     model.value = data.value
   }
-  isSaving.value = false;
+  isSaving.value = false
 }
 </script>
 
@@ -64,32 +64,37 @@ async function saveValue() {
         <span v-if="!setting.desc" class="text-lg">
           {{ setting.label }}
         </span>
-        <BaseTooltip :text="setting.desc" v-else trigger="hover" position="bottom">
+        <BaseTooltip v-else :text="setting.desc" trigger="hover" position="bottom">
           <span class="underline-dotted underline underline-black/50 text-lg">{{ setting.label }}</span>
         </BaseTooltip>
-        <div class="bg-orange-500 w-2 h-2 rounded-full transition-opacity absolute left--3 top-1/2 transform-gpu translate-y--1/2" :class="{
-          'opacity-0': !unsaved,
-        }"></div>
+        <div
+          class="bg-orange-500 w-2 h-2 rounded-full transition-opacity absolute left--3 top-1/2 transform-gpu translate-y--1/2" :class="{
+            'opacity-0': !unsaved,
+          }"
+        />
       </div>
-      <BaseInput v-if="setting.type === 'string' && typeof innerValue === 'string' && !setting.multiline"
-        class="flex-grow" v-model="innerValue" :type="setting.type" :placeholder="setting.placeholder"
-        :min="setting.minLength" :max="setting.maxLength" :pattern="setting.pattern" v-model:valid="valid" />
-      <BaseTextarea v-if="setting.type === 'string' && typeof innerValue === 'string' && setting.multiline"
-        class="flex-grow" v-model="innerValue" :type="setting.type" :placeholder="setting.placeholder"
-        :min="setting.minLength" :max="setting.maxLength" v-model:valid="valid" />
+      <BaseInput
+        v-if="setting.type === 'string' && typeof innerValue === 'string' && !setting.multiline"
+        v-model="innerValue" v-model:valid="valid" class="flex-grow" :type="setting.private ? 'password' : setting.type"
+        :placeholder="setting.placeholder" :min="setting.minLength" :max="setting.maxLength" :pattern="setting.pattern"
+      />
+      <BaseTextarea
+        v-if="setting.type === 'string' && typeof innerValue === 'string' && setting.multiline"
+        v-model="innerValue" v-model:valid="valid" class="flex-grow" :type="setting.private ? 'password' : setting.type"
+        :placeholder="setting.placeholder" :min="setting.minLength" :max="setting.maxLength"
+      />
     </div>
     <Transition name="toolbar-fade">
       <div v-show="unsaved" class="flex gap-2 justify-end absolute bottom--7 right-0 toolbar-wrapper">
         <BaseTooltip text="重置到修改前的值" trigger="hover" position="bottom-right">
-          <BaseButton @click="resetValue" ghost small :disabled="isSaving">
-            <div class="i-mingcute-refresh-anticlockwise-1-line my-0.5"></div>
+          <BaseButton ghost small :disabled="isSaving" @click="resetValue">
+            <div class="i-mingcute-refresh-anticlockwise-1-line my-0.5" />
           </BaseButton>
-
         </BaseTooltip>
         <BaseTooltip text="保存修改" trigger="hover" position="bottom-right">
-          <BaseButton @click="saveValue" ghost small :disabled="isSaving || !valid">
-            <div v-if="!isSaving" class="i-mingcute-save-2-line my-0.5"></div>
-            <div v-else class="i-mingcute-loading-3-fill my-0.5 animate-spin"></div>
+          <BaseButton ghost small :disabled="isSaving || !valid" @click="saveValue">
+            <div v-if="!isSaving" class="i-mingcute-save-2-line my-0.5" />
+            <div v-else class="i-mingcute-loading-3-fill my-0.5 animate-spin" />
           </BaseButton>
         </BaseTooltip>
       </div>

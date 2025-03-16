@@ -71,7 +71,7 @@ async function fetchData(_size = size.value, _page = page.value) {
   const _instance = currentInstance = Math.random()
   try {
     loading.value = true
-    const { data } = await app.api.post.index.get({
+    const { data } = await app.api.posts.index.get({
       query: {
         page: _page,
         size: _size,

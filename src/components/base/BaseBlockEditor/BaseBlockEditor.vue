@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import Details from '@tiptap-pro/extension-details'
+import DetailsContent from '@tiptap-pro/extension-details-content'
+import DetailsSummary from '@tiptap-pro/extension-details-summary'
+import { DragHandle } from '@tiptap-pro/extension-drag-handle-vue-3'
+import NodeRange from '@tiptap-pro/extension-node-range'
 import Blockquote from '@tiptap/extension-blockquote'
+import Document from '@tiptap/extension-document'
 import Highlight from '@tiptap/extension-highlight'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -12,35 +18,32 @@ import TableRow from '@tiptap/extension-table-row'
 import TextAlign from '@tiptap/extension-text-align'
 import StarterKit from '@tiptap/starter-kit'
 import { BubbleMenu, Editor, EditorContent, type JSONContent } from '@tiptap/vue-3'
-import { TrailingNode } from './extensions/trailing-node'
-import { InsertBetween } from './extensions/insert-between'
 import Commands from './extensions/commands'
+import { InsertBetween } from './extensions/insert-between'
 import suggestion from './extensions/suggestion'
-import Document from '@tiptap/extension-document'
 import { Title } from './extensions/title'
+import { TrailingNode } from './extensions/trailing-node'
 import { defaultBlockTools } from './tools/block.tools'
-import Details from '@tiptap-pro/extension-details'
-import DetailsContent from '@tiptap-pro/extension-details-content'
-import DetailsSummary from '@tiptap-pro/extension-details-summary'
-import { DragHandle } from '@tiptap-pro/extension-drag-handle-vue-3'
-import NodeRange from '@tiptap-pro/extension-node-range'
-
-
-const CustomDocument = Document.extend({
-  content: 'title (block|horizontalRule)+',
-})
 
 const {
   titlePlaceholder = '请输入标题',
   placeholder = '输入 / 来选择区块',
 } = defineProps<{
-  titlePlaceholder?: string,
+  titlePlaceholder?: string
   placeholder?: string
 }>()
 
+const CustomDocument = Document.extend({
+  content: 'title (block|horizontalRule)+',
+})
+
 const allBlockTools = defaultBlockTools()
 
-let editor = ref<Editor>()
+const editor = ref<Editor>()
+
+defineExpose({
+  editor,
+})
 
 const isTyping = ref(false)
 const editorRef = useTemplateRef('editorRef')
@@ -92,7 +95,7 @@ onMounted(() => {
 
           return placeholder
         },
-        showOnlyCurrent: true
+        showOnlyCurrent: true,
       }),
       Blockquote.extend({
         content: 'paragraph',
@@ -144,7 +147,7 @@ onMounted(() => {
         title.value = innerTitle = getTextFromTitleNode(titleNode)
       }
       content.value = innerContent = JSON.stringify(json.content.slice(1))
-    }
+    },
   })
 
   window.addEventListener('pointermove', cancelTyping, { passive: true })
@@ -163,7 +166,7 @@ onMounted(() => {
             content: [{
               type: 'text',
               text: newTitle,
-            }]
+            }],
           },
           ...parsedContent,
         ],
@@ -190,10 +193,6 @@ onBeforeUnmount(() => {
   editor.value?.destroy()
   window.removeEventListener('pointermove', cancelTyping)
 })
-
-
-
-
 </script>
 
 <template>
@@ -201,8 +200,10 @@ onBeforeUnmount(() => {
     <DragHandle :editor="editor">
       <div class="custom-drag-handle" />
     </DragHandle>
-    <EditorContent v-if="editor" ref="editorRef" class="prose" v-bind="$attrs" :editor="editor" @keydown="isTyping = true"
-      @keyup.esc="isTyping = false" />
+    <EditorContent
+      v-if="editor" ref="editorRef" class="prose" v-bind="$attrs" :editor="editor" @keydown="isTyping = true"
+      @keyup.esc="isTyping = false"
+    />
   </template>
 </template>
 
@@ -234,7 +235,7 @@ onBeforeUnmount(() => {
 
   :deep() {
     .ProseMirror {
-      @apply flex-1 w-full max-w-2xl mx-auto max-sm:px-4;
+      @apply flex-1 w-full max-w-4xl mx-auto max-sm:px-4;
 
       .ProseMirror-noderangeselection {
         *::selection {
@@ -512,7 +513,6 @@ onBeforeUnmount(() => {
     .ProseMirror-selectednode {
       outline: 2px solid lightblue;
     }
-
 
     [data-block-width="wide"] {
       @apply max-w-4xl !important;

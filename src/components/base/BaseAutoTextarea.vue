@@ -15,6 +15,8 @@ const props = defineProps<BaseTextareaProps>()
 const model = defineModel<string>({ default: '' })
 const modelValid = defineModel<boolean>('valid', { default: true })
 
+const { textarea } = useTextareaAutosize({ styleProp: 'minHeight', input: model })
+
 const compiledPattern = computed(() => {
   if (props.pattern) {
     return new RegExp(props.pattern)
@@ -98,7 +100,7 @@ const LengthCheckComp = defineComponent(() => {
         disabled: props.disabled,
       }]"
     >
-      <textarea v-bind="$attrs" v-model="model" :disabled="disabled" />
+      <textarea ref="textarea" v-bind="$attrs" v-model="model" :disabled="disabled" rows="2" />
       <div class="absolute bottom-0 left-0 h-[calc(1.6em+0.5rem)]">
         <div
           v-if="typeof max === 'number' || typeof min === 'number' || props.pattern" class="length-check" :class="{
@@ -140,7 +142,6 @@ const LengthCheckComp = defineComponent(() => {
     @apply w-full outline-0;
     @apply bg-white;
     @apply px-2 py-2 pb-[calc(0.5rem+1.6em+0.5rem)];
-    @apply min-h-[calc(3rem+1.6em+0.5rem)];
   }
 
   .length-check {

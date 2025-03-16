@@ -21,5 +21,6 @@ export default defineConfig({
   safelist: [
     'i-mingcute-planet-line',
     'i-mingcute-profile-line',
+    'i-mingcute-ai-line',
   ],
 })
